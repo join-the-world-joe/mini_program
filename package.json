@@ -1,0 +1,11 @@
+{
+  "name": "mini_program",
+  "version": "1.0.0",
+  "description": "Directory\r asset 资源文件夹\r asset/icon 图标文件夹\r asset/image 图片文件夹\r common 公共文件夹\r common/language 语言文件夹\r common/translator 翻译器\r config 项目配置文件夹\r framework 框架\r model 数据模型\r plugin 插件\r runtime 运行时\r screen 展示页\r utils 工具\r validator 校验器",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

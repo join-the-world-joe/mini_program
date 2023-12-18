@@ -1,0 +1,10 @@
+<!--screen/home/home.wxml-->
+<view class="container">
+  <view hidden="{{hideCarousel}}" class="carousel_container">
+    <carousel dataMap="{{recordsOfCarousel}}"> </carousel>
+  </view>
+  <text>some words</text>
+  <button bind:tap="onSet"> Set </button>
+   <button bind:tap="onGet"> Get </button> 
+   <button bind:tap="onClear"> Clear </button> 
+</view>

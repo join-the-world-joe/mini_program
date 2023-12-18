@@ -1,0 +1,12 @@
+<view class="container">
+  <view class="child1">
+    <image class="image" src="/asset/image/apple.png"></image>
+</view>
+  <view class="child2">
+    <image class="image" src="/asset/image/orange.png"></image>
+  </view>
+  <view class="child3">
+    <image class="image" src="/asset/image/grape.png"></image>
+  </view>
+
+</view>

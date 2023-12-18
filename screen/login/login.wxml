@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="title">{{title}}</view>
+
+  <!-- <view class="space1"></view> -->
+
+  <view class="row">
+    <view class="label">{{titleOfPhoneNumber}}</view>
+    <input maxlength="{{lengthOfPhoneNumber}}" value="18620283370" bindinput="on_phone_number_change" type="number" placeholder-style="font-size:20px" placeholder="{{tipOfPlaceholderOfInputOfPhoneNumber}}"/>
+  </view>
+
+  <view class="line"></view>
+
+  <view class="row">
+    <view class="label">{{titleOfVerificationCode}}</view>
+    <input maxlength="{{lengthOfVerificationCode}}"  value =''  bindinput="on_verification_code_change"  type="number" placeholder-class="placeholder" placeholder="{{tipOfPlaceholderOfInputOfVerificationCode}}" />
+    <button class="sms_button"  disabled="{{verificationCodeRequested}}"  type="primary" bind:tap="request_to_send_sms" size="mini">{{smsButtonLabel}}</button>
+  </view>
+
+  <view class="line"></view>
+
+  <view class="submit_button_container">
+    <button class="submit_button" bind:tap="request_to_login" disabled="{{submitButtonDisabled}}" type="primary">{{titleOfLoginButton}}</button>
+  </view>
+
+  <view class="guess_container">
+    <view>{{titleOfGuess}}?{{titleOfPlease}}{{titleOfClick}}</view>
+    <view bind:tap="navigate_to_register" class='register_label'>{{titleOfRegisterButton}}</view>
+  </view>
+
+  <view class="space2"></view>
+  
+</view>

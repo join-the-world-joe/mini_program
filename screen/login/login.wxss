@@ -1,0 +1,83 @@
+page {
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.line {
+  border: 1px solid #cccccc;
+  opacity: 0.3;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.sms_button {
+  display: flex;
+  align-self:stretch;
+  width: 80px !important;
+}
+
+.space1 {
+  height: 5%;
+}
+
+.space2 {
+  height: 50%;
+}
+
+.row {
+  display: flex;
+  width: 90%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.label {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.placeholder {
+  font-size:20px;
+  font-weight: 400;
+}
+
+.submit_button_container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  width: 90%;
+  align-items:stretch;
+}
+
+.submit_button {
+  width: 100% !important;
+}
+
+.guess_container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  font-size: 20px;
+  align-items: flex-end;
+}
+
+.register_label {
+  margin-left: 2px;
+  font-size: 23px;
+}
