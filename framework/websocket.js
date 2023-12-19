@@ -35,7 +35,7 @@ class Websocket {
         success: () => this._onSuccess(),
         fail: () => this._onFail(),
       })
-    }catch(e) {
+    } catch(e) {
       console.log("framework.websocket.Connect failiure, err: ", e)
     }
     finally {

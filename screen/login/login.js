@@ -15,6 +15,7 @@ const { LoginRsp } = require("../../common/protocol/account/login")
 Page({
   data: {
     from: 'login',
+    hide: false,
     phoneNumber: '18620283370',
     verificationCode: '',
     titleOfLoginButton: '',
@@ -44,7 +45,7 @@ Page({
       var caller = 'observe';
       var major = packet.GetHeader().GetMajor()
       var minor = packet.GetHeader().GetMinor()
-      
+
       Log.Debug({
         major: major,
         minor: minor,
@@ -94,6 +95,7 @@ Page({
       url: '/screen/home/home',
     })
   } else {
+    // error occurs
     if (response.GetCode() == Code.InvalidData ) {
       // verification code is invalid
       wx.showModal({
@@ -298,7 +300,6 @@ Page({
    * Lifecycle function--Called when page is initially rendered
    */
   onReady() {
-
   },
 
   /**
@@ -306,13 +307,18 @@ Page({
    */
   onShow() {
     Runtime.SetObserve(this.observe)
+    this.setData({
+      hide: false,
+    })
   },
 
   /**
    * Lifecycle function--Called when page hide
    */
   onHide() {
-
+    this.setData({
+      hide: true,
+    })
   },
 
   /**

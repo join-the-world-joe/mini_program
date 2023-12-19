@@ -1,10 +1,15 @@
-<!--screen/home/home.wxml-->
+
 <view class="container">
   <view hidden="{{hideCarousel}}" class="carousel_container">
-    <carousel dataMap="{{recordsOfCarousel}}"> </carousel>
+    <carousel dataMap="{{recordsOfADOfCarousel}}"> </carousel>
   </view>
-  <text>some words</text>
-  <button bind:tap="onSet"> Set </button>
+  <view hidden="{{hideMenu}}" class="advertisement_title_container">
+    <view bind:tap="onTapDeals" style="color:{{indexOfMenu==1 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfDeals}}</view>
+    <view bind:tap="onTapComping" style="color:{{indexOfMenu==2 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfCamping}}</view>
+    <view bind:tap="onTapBarbecue" style="color:{{indexOfMenu==3 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfBarbecue}}</view>
+    <view bind:tap="onTapSnacks" style="color:{{indexOfMenu==4 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfSnacks}}</view>
+  </view>
+  <!-- <button bind:tap="onSet"> Set </button>
    <button bind:tap="onGet"> Get </button> 
-   <button bind:tap="onClear"> Clear </button> 
+   <button bind:tap="onClear"> Clear </button>  -->
 </view>

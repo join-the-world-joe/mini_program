@@ -14,6 +14,9 @@ class Config {
   // storage key
   static KeyOfCarousel = 'carousel'
 
+  // screen
+  static PeriodOfScreenInitialisation = 100
+  static PeriodOfScreenNormal = 500
 }
 
 module.exports = {

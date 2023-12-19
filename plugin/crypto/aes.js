@@ -10,8 +10,8 @@ class AES {
     var output = ""
     try {
       var temp =  wx.arrayBufferToBase64(cipherText)
-      var decrypted = _crypto.AES.decrypt(temp, this.key, {
-        iv: this.iv,
+      var decrypted = _crypto.AES.decrypt(temp, AES.key, {
+        iv: AES.iv,
         mode: _crypto.mode.CBC,
         padding: _crypto.pad.Pkcs7
       });
@@ -27,8 +27,8 @@ class AES {
   static Encrypt(plainText) {
     var output = Uint8Array.from([])
     try{
-      var encrypted = _crypto.AES.encrypt(plainText, this.key, {
-        iv: this.iv,
+      var encrypted = _crypto.AES.encrypt(plainText, AES.key, {
+        iv: AES.iv,
         mode: _crypto.mode.CBC,
         padding: _crypto.pad.Pkcs7
       });

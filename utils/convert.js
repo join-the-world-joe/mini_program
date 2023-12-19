@@ -6,7 +6,7 @@ class Convert {
         var character = String.fromCharCode(array[i])
         output += character
       }
-    } catch(e){
+    } catch(e) {
       console.log("Convert.Uint8ArrayToString failure, err: ", e)
     } finally {
       return output

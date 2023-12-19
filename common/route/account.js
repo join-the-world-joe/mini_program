@@ -8,17 +8,17 @@ class Account {
   
   static GetName(input) {
     switch (input) {
-      case this.LoginReq:
+      case Account.LoginReq:
         return 'LoginReq'
-      case this.LoginRsp:
+      case Account.LoginRsp:
         return 'LoginRsp'
-      case this.LoginReq:
+      case Account.LoginReq:
         return 'LoginReq'
-      case this.LoginRsp:
+      case Account.LoginRsp:
         return 'LoginRsp'
-      case this.RegisterReq:
+      case Account.RegisterReq:
         return 'RegisterReq'
-      case this.RegisterRsp:
+      case Account.RegisterRsp:
         return 'RegisterRsp'
       default:
         return 'unknown'

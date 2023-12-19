@@ -9,19 +9,19 @@ class Major {
 
   static GetName(input) {
     switch (input) {
-      case this.SMS:
+      case Major.SMS:
         return 'SMS';
-      case this.Admin:
+      case Major.Admin:
         return 'Admin';
-      case this.FrontendGateway:
+      case Major.FrontendGateway:
         return 'FrontendGateway';
-      case this.BackendGateway:
+      case Major.BackendGateway:
         return 'BackendGateway';
-      case this.Account:
+      case Major.Account:
         return 'Account';
-      case this.Inform:
+      case Major.Inform:
         return 'Inform';
-      case this.Advertisement:
+      case Major.Advertisement:
         return 'Advertisement'
       default:
         return 'unknown';

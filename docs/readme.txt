@@ -23,5 +23,6 @@ validator 校验器
 2. 新页面要检查，SetObserve，Observe
 3. Observe不用加try catch
 4. onLoad检查catch，onReady加loading提示，组件加忽略事件处理
+5. 周期性调用process，做例行任务，如echo，续约，心跳，更新配置等
 
 

@@ -18,4 +18,9 @@ module.exports = {
   TitleOfPhoneNumberRegisterScreen: 'the title of phone number register screen',
   NotificationOfRegisterSuccessfully: 'the notification of register successfully',
   PhoneNumberAlreadyRegistered: 'phone number already registered',
+  TitleOfLoading: 'title of loading',
+  TitleOfDeals: 'title of deals',
+  TitleOfBarbecue: 'title of barbecue',
+  TitleOfSnacks: 'title of snacks',
+  TitleOfCamping: 'title of comping'
 }

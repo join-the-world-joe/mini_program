@@ -4,7 +4,7 @@ class Translator {
   static Native = Chinese.Name
 
   static SetNative(input) {
-    this.Native = input
+    Translator.Native = input
   }
 
   static Load() {
@@ -12,7 +12,7 @@ class Translator {
   }
 
   static Translate(input) {
-    if(this.Native.localeCompare(Chinese.Name) == 0) {
+    if(Translator.Native.localeCompare(Chinese.Name) == 0) {
       return Chinese.Translate(input)
     }
     return '未知翻译语言';

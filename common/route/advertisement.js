@@ -32,65 +32,65 @@ class Advertisement {
   
   static GetName(input) {
     switch(input) {
-      case this.FetchVersionOfADOfCarouselReq:
+      case Advertisement.FetchVersionOfADOfCarouselReq:
         return 'FetchVersionOfADOfCarouselReq'
-      case this.FetchVersionOfADOfCarouselRsp:
+      case Advertisement.FetchVersionOfADOfCarouselRsp:
         return 'FetchVersionOfADOfCarouselRsp'
-      case this.FetchIdListOfADOfCarouselReq:
+      case Advertisement.FetchIdListOfADOfCarouselReq:
         return 'FetchIdListOfADOfCarouselReq'
-      case this.FetchIdListOfADOfCarouselRsp:
+      case Advertisement.FetchIdListOfADOfCarouselRsp:
         return 'FetchIdListOfADOfCarouselRsp'
-      case this.FetchRecordsOfADOfCarouselReq:
+      case Advertisement.FetchRecordsOfADOfCarouselReq:
         return 'FetchRecordsOfADOfCarouselReq'
-      case this.FetchRecordsOfADOfCarouselRsp:
+      case Advertisement.FetchRecordsOfADOfCarouselRsp:
         return 'FetchRecordsOfADOfCarouselRsp'
-      case this.FetchVersionOfADOfDealsReq:
+      case Advertisement.FetchVersionOfADOfDealsReq:
         return 'FetchVersionOfADOfDealsReq'
-      case this.FetchVersionOfADOfDealsRsp :
+      case Advertisement.FetchVersionOfADOfDealsRsp :
         return 'FetchVersionOfADOfDealsRsp'
-      case this.FetchIdListOfADOfDealsReq:
+      case Advertisement.FetchIdListOfADOfDealsReq:
         return 'FetchIdListOfADOfDealsReq'
-      case this.FetchIdListOfADOfDealsRsp:
+      case Advertisement.FetchIdListOfADOfDealsRsp:
         return 'FetchIdListOfADOfDealsRsp'
-      case this.FetchRecordsOfADOfDealsReq:
+      case Advertisement.FetchRecordsOfADOfDealsReq:
         return 'FetchRecordsOfADOfDealsReq'
-      case this.FetchRecordsOfADOfDealsRsp:
+      case Advertisement.FetchRecordsOfADOfDealsRsp:
         return 'FetchRecordsOfADOfDealsRsp'
-      case this.FetchVersionOfADOfHotsReq:
+      case Advertisement.FetchVersionOfADOfHotsReq:
         return 'FetchVersionOfADOfHotsReq'
-      case this.FetchVersionOfADOfHotsRsp:
+      case Advertisement.FetchVersionOfADOfHotsRsp:
         return 'FetchVersionOfADOfHotsRsp'
-      case this.FetchIdListOfADOfHotsReq:
+      case Advertisement.FetchIdListOfADOfHotsReq:
         return 'FetchIdListOfADOfHotsReq'
-      case this.FetchIdListOfADOfHotsRsp:
+      case Advertisement.FetchIdListOfADOfHotsRsp:
         return 'FetchIdListOfADOfHotsRsp'
-      case this.FetchRecordsOfADOfHotsReq:
+      case Advertisement.FetchRecordsOfADOfHotsReq:
         return 'FetchRecordsOfADOfHotsReq'
-      case this.FetchRecordsOfADOfHotsRsp:
+      case Advertisement.FetchRecordsOfADOfHotsRsp:
         return 'FetchRecordsOfADOfHotsRsp'
-      case this.FetchVersionOfADOfBarbecueReq:
+      case Advertisement.FetchVersionOfADOfBarbecueReq:
         return 'FetchVersionOfADOfBarbecueReq'
-      case this.FetchVersionOfADOfBarbecueRsp:
+      case Advertisement.FetchVersionOfADOfBarbecueRsp:
         return 'FetchVersionOfADOfBarbecueRsp'
-      case this.FetchIdListOfADOfBarbecueReq:
+      case Advertisement.FetchIdListOfADOfBarbecueReq:
         return 'FetchIdListOfADOfBarbecueReq'
-      case this.FetchIdListOfADOfBarbecueRsp:
+      case Advertisement.FetchIdListOfADOfBarbecueRsp:
         return 'FetchIdListOfADOfBarbecueRsp'
-      case this.FetchRecordsOfADOfBarbecueReq:
+      case Advertisement.FetchRecordsOfADOfBarbecueReq:
         return 'FetchRecordsOfADOfBarbecueReq'
-      case this.FetchRecordsOfADOfBarbecueRsp:
+      case Advertisement.FetchRecordsOfADOfBarbecueRsp:
         return 'FetchRecordsOfADOfBarbecueRsp'
-      case this.FetchVersionOfADOfSnacksReq:
+      case Advertisement.FetchVersionOfADOfSnacksReq:
         return 'FetchVersionOfADOfSnacksReq'
-      case this.FetchVersionOfADOfSnacksRsp:
+      case Advertisement.FetchVersionOfADOfSnacksRsp:
         return 'FetchVersionOfADOfSnacksRsp'
-      case this.FetchIdListOfADOfSnacksReq:
+      case Advertisement.FetchIdListOfADOfSnacksReq:
         return 'FetchIdListOfADOfSnacksReq'
-      case this.FetchIdListOfADOfSnacksRsp:
+      case Advertisement.FetchIdListOfADOfSnacksRsp:
         return 'FetchIdListOfADOfSnacksRsp'
-      case this.FetchRecordsOfADOfSnacksReq:
+      case Advertisement.FetchRecordsOfADOfSnacksReq:
         return 'FetchRecordsOfADOfSnacksReq'
-      case this.FetchRecordsOfADOfSnacksRsp:
+      case Advertisement.FetchRecordsOfADOfSnacksRsp:
         return 'FetchRecordsOfADOfSnacksRsp'
       default:
         return 'unknown'

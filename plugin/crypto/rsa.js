@@ -7,12 +7,12 @@ class RSA {
 
   static encrypt(plainText) {
     var _crypto = new WxmpRsa()
-    _crypto.setPublicKey(this.publicKey)
+    _crypto.setPublicKey(RSA.publicKey)
     return _crypto.encryptLong(plainText)
   }
   static decrypt(cipherText) {
     var _crypto = new WxmpRsa()
-    _crypto.setPrivateKey(this.privateKey)
+    _crypto.setPrivateKey(RSA.privateKey)
     return _crypto.decryptLong(cipherText)
   }
 }
