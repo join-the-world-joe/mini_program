@@ -14,7 +14,12 @@ const { FetchVersionOfADOfCarousel } = require('../../common/business/advertisem
 const { FetchRecordsOfADOfCarousel } = require('../../common/business/advertisement/fetch_records_of_ad_of_carousel')
 const { FetchRecordsOfADOfCarouselRsp } = require('../../common/protocol/advertisement/fetch_records_of_ad_of_carousel')
 var modelOfAdvertisement = require('../../model/advertisement')
-
+const { FetchVersionOfADOfDeals } = require('../../common/business/advertisement/fetch_version_of_ad_of_deals')
+const { FetchVersionOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_version_of_ad_of_deals')
+const { FetchIdListOfADOfDeals } = require('../../common/business/advertisement/fetch_id_list_of_ad_of_deals')
+const { FetchRecordsOfADOfDeals } = require('../../common/business/advertisement/fetch_records_of_ad_of_deals')
+const { FetchIdListOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_id_list_of_ad_of_deals')
+const { FetchRecordsOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_records_of_ad_of_deals')
 Page({
 
   /**
@@ -22,10 +27,9 @@ Page({
    */
   data: {
     from: 'home',
-    hideCarousel: true,
-    loadCarouselCompleted: false,
     hideMenu: true,
-    indexOfMenu: 1,
+    indexOfSubMenu: 1,
+    subMenuSelected: false,
     loadMenuCompleted: false,
     versionOfADOfCarousel: 0,
     idListOfADOfCarousel: [],
@@ -38,6 +42,9 @@ Page({
     titleOfCamping: '',
     titleOfBarbecue: '',
     titleOfSnacks: '',
+
+    hideCarousel: true,
+    loadCarouselCompleted: false,
     versionOfADOfCarouselRequested: false,
     versionOfADOfCarouselRequestTime: undefined,
     versionOfADOfCarouselRequestCompleted: false,
@@ -47,9 +54,18 @@ Page({
     recordsOfADOfCarouselRequested: false,
     recordsOfADOfCarouselRequestTime: undefined,
     recordsOfADOfCarouselRequestCompleted: false,
+
+    hideContent: true,
+    loadDealsCompleted: false,
     versionOfADOfDealsRequested: false,
     versionOfADOfDealsRequestTime: undefined,
     versionOfADOfDealsRequestCompleted: false,
+    idListOfADOfDealsRequested: false,
+    idListOfADOfDealsRequestTime: undefined,
+    idListOfADOfDealsRequestCompleted: false,
+    recordsOfADOfDealsRequested: false,
+    recordsOfADOfDealsRequestTime: undefined,
+    recordsOfADOfDealsRequestCompleted: false,
   },
   setup() {
     Runtime.SetPeriod(Config.PeriodOfScreenInitialisation)
@@ -84,7 +100,8 @@ Page({
     var caller = 'carousel'
     if (this.data.versionOfADOfCarouselRequestCompleted &&
       this.data.idListOfADOfCarouselRequestCompleted &&
-      this.data.recordsOfADOfCarouselRequestCompleted) {
+      this.data.recordsOfADOfCarouselRequestCompleted &&
+      !this.data.loadCarouselCompleted) {
         this.setData({
           hideCarousel: false,
           loadCarouselCompleted: true,
@@ -118,18 +135,68 @@ Page({
   },
   menu() {
     var caller = 'menu'
-    if (this.data.loadCarouselCompleted) {
+    if (this.data.loadCarouselCompleted &&
+      this.data.loadDealsCompleted &&
+      !this.data.loadMenuCompleted) {
       this.setData({
         loadMenuCompleted: true,
         hideMenu: false,
       })
     }
   },
+  content() {
+    var caller = 'content'
+    if (!this.data.subMenuSelected && 
+      this.data.indexOfSubMenu == 1 &&
+      this.data.loadCarouselCompleted) {
+      if (this.data.versionOfADOfDealsRequestCompleted &&
+        this.data.idListOfADOfDealsRequestCompleted &&
+        this.data.recordsOfADOfDealsRequestCompleted &&
+        !this.data.loadDealsCompleted) {
+          this.setData({
+            hideContent: false,
+            loadDealsCompleted: true,
+          })
+      }
+      if (!this.data.versionOfADOfDealsRequested) {
+        FetchVersionOfADOfDeals({from:this.data.from, caller:caller})
+        this.setData({
+          versionOfADOfDealsRequested: true,
+          versionOfADOfDealsRequestTime: Date.now()
+        })
+      }
+      if (this.data.versionOfADOfDealsRequestCompleted &&
+        !this.data.idListOfADOfDealsRequested) {
+          FetchIdListOfADOfDeals({from: this.data.from,caller: caller})
+          this.setData({
+            idListOfADOfDealsRequested: true,
+            idListOfADOfDealsRequestTime: Date.now()
+          })
+      }
+      if (this.data.versionOfADOfDealsRequestCompleted &&
+        this.data.idListOfADOfDealsRequestCompleted &&
+        !this.data.recordsOfADOfDealsRequested) {
+          FetchRecordsOfADOfDeals({from: this.data.from,caller: caller, advertisementIdList:this.data.idListOfADOfDeals})
+          this.setData({
+            recordsOfADOfDealsRequested: true,
+            recordsOfADOfDealsRequestTime: Date.now()
+          })
+      }
+    }
+  },
+  checkLoading() {
+    if (this.data.loadCarouselCompleted &&
+      this.data.loadDealsCompleted &&
+      this.data.loadMenuCompleted) {
+      wx.hideLoading()
+    }
+  },
   process() {
     this.carousel()
     this.menu()
+    this.content()
+    this.checkLoading()
     // if all completed, set period to normal
-    
   },
   observe(packet) {
     try{
@@ -154,7 +221,16 @@ Page({
       } else if(major == Major.Advertisement && 
         minor == Advertisement.FetchRecordsOfADOfCarouselRsp) {
         this.fetchRecordsOfADOfCarouselHandler(packet)
-      } else {
+      } else if (major == Major.Advertisement &&
+        minor == Advertisement.FetchVersionOfADOfDealsRsp) {
+        this.fetchVersionOfADOfDealsHandler(packet)
+      } else if (major == Major.Advertisement &&
+        minor == Advertisement.FetchIdListOfADOfDealsRsp) {
+        this.fetchIdListOfADOfDealsHandler(packet)
+      } else if (major == Major.Advertisement &&
+        minor == Advertisement.FetchRecordsOfADOfDealsRsp) {
+        this.fetchRecordsOfADOfDealsHandler(packet)
+      }else {
         Log.Debug({
           major: major,
           minor: minor,
@@ -173,6 +249,77 @@ Page({
       })
     } finally {
       return 
+    }
+  },
+  fetchRecordsOfADOfDealsHandler(packet) {
+    var caller = 'fetchRecordsOfADOfDeals'
+    var response = (new FetchRecordsOfADOfDealsRsp).FromJson(packet.GetBody())
+    Log.Debug({
+      major: packet.GetHeader().GetMajor(),
+      minor: packet.GetHeader().GetMinor(),
+      from: this.data.from,
+      caller: caller,
+      message: 'code: ' + response.GetCode(),
+    })
+    if (response.GetCode() == Code.OK) {
+      // success
+      // console.log('recordsOfADOfCarouse: ', response.GetRecordsOfADOfCarousel())
+      var records = response.GetRecordsOfADOfDeals()
+      for (var i=0; i<records.length; i++) {
+        var advertisement = (new modelOfAdvertisement.Advertisement()).FromJson(records[i])
+        var temp = this.data.recordsOfADOfCarousel
+        temp[advertisement.advertisement_id] = advertisement
+        this.setData({
+          recordsOfADOfDeals:temp,
+        })
+      }
+      this.setData({
+        recordsOfADOfDealsRequestCompleted: true,
+      })
+      console.log(this.data.recordsOfADOfDeals)
+    } else {
+      // error occurs
+    }
+  },
+  fetchIdListOfADOfDealsHandler(packet) {
+    var caller = 'fetchIdListOfADOfDealsHandler'
+    var response = (new FetchIdListOfADOfDealsRsp).FromJson(packet.GetBody())
+    Log.Debug({
+      major: packet.GetHeader().GetMajor(),
+      minor: packet.GetHeader().GetMinor(),
+      from: this.data.from,
+      caller: caller,
+      message: 'code: ' + response.GetCode(),
+    })
+    if (response.GetCode() == Code.OK) {
+      // success
+      this.setData({
+        versionOfADOfDeals: response.version_of_ad_of_deals,
+        idListOfADOfDeals: response.id_list_of_ad_of_deals,
+        idListOfADOfDealsRequestCompleted: true,
+      })
+    } else {
+      // error occurs
+    }
+  },
+  fetchVersionOfADOfDealsHandler(packet) {
+    var caller = 'fetchVersionOfADOfDealsHandler'
+    var response = (new FetchVersionOfADOfDealsRsp).FromJson(packet.GetBody())
+    Log.Debug({
+      major: packet.GetHeader().GetMajor(),
+      minor: packet.GetHeader().GetMinor(),
+      from: this.data.from,
+      caller: caller,
+      message: 'code: ' + response.GetCode(),
+    })
+    if (response.GetCode() == Code.OK) { 
+      // success
+      this.setData({
+        versionOfADOfDeals: response.GetVersionOfADOfDeals(),
+        versionOfADOfDealsRequestCompleted: true,
+      })
+    } else {
+      // error occurs
     }
   },
   fetchRecordsOfADOfCarouselHandler(packet) {
@@ -237,13 +384,9 @@ Page({
     })
     if (response.GetCode() == Code.OK) {
       // success
-      var carousel = new Carousel()
-      carousel.SetVersionOfADOfCarousel(response.version_of_ad_of_carousel)
-      carousel.SetIdListOfADOfCarousel(response.id_list_of_ad_of_carousel)
-      wx.setStorageSync(Config.KeyOfCarousel, carousel)
       this.setData({
-        versionOfADOfCarousel: carousel.version_of_ad_of_carousel,
-        idListOfADOfCarousel: carousel.id_list_of_ad_of_carousel,
+        versionOfADOfCarousel: response.version_of_ad_of_carousel,
+        idListOfADOfCarousel: response.id_list_of_ad_of_carousel,
         idListOfADOfCarouselRequestCompleted: true,
       })
     } else {
@@ -253,25 +396,25 @@ Page({
   onTapDeals() {
     console.log('onTapDeals')
     this.setData({
-      indexOfMenu:1,
+      indexOfSubMenu:1,
     })
   },
   onTapComping() {
     console.log('onTapComping')
     this.setData({
-      indexOfMenu:2,
+      indexOfSubMenu:2,
     })
   },
   onTapBarbecue() {
     console.log('onTapBarbecue')
     this.setData({
-      indexOfMenu:3,
+      indexOfSubMenu:3,
     })
   },
   onTapSnacks() {
     console.log('onTapSnacks')
     this.setData({
-      indexOfMenu:4,
+      indexOfSubMenu:4,
     })
   },
   onSet() {
@@ -311,35 +454,12 @@ Page({
    */
   onLoad(options) {
     this.setup()
-
     this.setData({
       titleOfBarbecue: Translator.Translate(TitleOfBarbecue),
       titleOfDeals: Translator.Translate(TitleOfDeals),
       titleOfSnacks: Translator.Translate(TitleOfSnacks),
       titleOfCamping: Translator.Translate(TitleOfCamping),
     })
-
-    // console.log('version_of_carousel: ', versionOfCarousel)
-
-    // var json = `{0:'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/1/2.jpg
-    // ', 1:'image1', 2:'image2'}`
-    // var image1 = `https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/1/2.jpg
-    // `
-    // var image2 = `https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/1/1.jpg
-    // `
-    // var advertisement1 = new Advertisement();
-    // var advertisement2 = new Advertisement();
-    // advertisement1.SetImage({0:image1})
-    // advertisement1.SetAdvertisementId(1)
-    // advertisement2.SetImage({0:image2})
-    // advertisement2.SetAdvertisementId(2)
-    // var dataMap = new Object()
-    // dataMap[1] = advertisement1
-    // dataMap[2] = advertisement2
-    // this.setData({
-    //   recordsOfCarousel:dataMap
-    // })
-    // console.log(dataMap)
   },
 
   /**

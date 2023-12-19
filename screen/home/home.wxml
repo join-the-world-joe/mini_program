@@ -4,10 +4,10 @@
     <carousel dataMap="{{recordsOfADOfCarousel}}"> </carousel>
   </view>
   <view hidden="{{hideMenu}}" class="advertisement_title_container">
-    <view bind:tap="onTapDeals" style="color:{{indexOfMenu==1 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfDeals}}</view>
-    <view bind:tap="onTapComping" style="color:{{indexOfMenu==2 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfCamping}}</view>
-    <view bind:tap="onTapBarbecue" style="color:{{indexOfMenu==3 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfBarbecue}}</view>
-    <view bind:tap="onTapSnacks" style="color:{{indexOfMenu==4 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfSnacks}}</view>
+    <view bind:tap="onTapDeals" style="color:{{indexOfSubMenu==1 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfDeals}}</view>
+    <view bind:tap="onTapComping" style="color:{{indexOfSubMenu==2 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfCamping}}</view>
+    <view bind:tap="onTapBarbecue" style="color:{{indexOfSubMenu==3 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfBarbecue}}</view>
+    <view bind:tap="onTapSnacks" style="color:{{indexOfSubMenu==4 ? 'blue' : 'black'}}" class="advertisement_item">{{titleOfSnacks}}</view>
   </view>
   <!-- <button bind:tap="onSet"> Set </button>
    <button bind:tap="onGet"> Get </button> 

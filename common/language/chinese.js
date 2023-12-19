@@ -33,8 +33,8 @@ class Chinese {
   }
 
   static Translate(input) {
-    console.log('input: ', input)
-    console.log('s: ', Chinese.Language[input])
+    // console.log('input: ', input)
+    // console.log('s: ', Chinese.Language[input])
     if (Chinese.Language[input] != null) {
       return Chinese.Language[input]
     }
