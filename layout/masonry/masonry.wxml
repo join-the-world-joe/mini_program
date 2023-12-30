@@ -1,0 +1,5 @@
+<view class="masonry-container">
+  <view wx:for="{{items}}" wx:key="index" class="masonry-item" style="height: {{item.height}}rpx;">
+    {{item.text}}
+  </view>
+</view>

@@ -1,0 +1,8 @@
+<view class="masonry">
+  <view class="masonry-brick" wx:for="{{dataMap}}" wx:key="advertisementId">
+    <view class="image_container" data-id="{{item.advertisement_id}}"  bind:tap="tapItem">
+      <image class="image" src="{{item.image[0]}}" />
+    </view>
+    <!-- <text>{{item.advertisement_id}}</text> -->
+  </view>
+</view>

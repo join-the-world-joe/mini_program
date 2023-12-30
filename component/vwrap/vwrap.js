@@ -1,6 +1,10 @@
 Component({
   properties: {
-    dataMap: {
+    leftSideDataMap: {
+      type: Object,
+      value: {}
+    },
+    rightSideDataMap: {
       type: Object,
       value: {}
     },

@@ -22,7 +22,8 @@ validator 校验器
 1. 有打印代码没打印信息，可能是import log问题
 2. 新页面要检查，SetObserve，Observe
 3. Observe不用加try catch
-4. onLoad检查catch，onReady加loading提示，组件加忽略事件处理
-5. 周期性调用process，做例行任务，如echo，续约，心跳，更新配置等
+4. 周期性调用process，做例行任务，如echo，续约，心跳，更新配置等
+5. 广告image规则；轮播图(16:9),竖屏广告图(9:16),横图广告封面使用轮播图
+6. 广告图 是 竖屏图, 全屏轮播展示；最少1张; 建议最多5张
 
 

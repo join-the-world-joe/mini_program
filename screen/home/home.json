@@ -1,5 +1,7 @@
 {
   "usingComponents": {
-    "carousel": "/component/carousel/carousel"
+    "carousel": "/component/carousel/carousel",
+    "wrap": "/component/wrap/wrap",
+    "vwrap": "/component/vwrap/vwrap"
   }
 }

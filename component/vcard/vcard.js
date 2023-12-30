@@ -1,8 +1,10 @@
+const { Advertisement } = require("../../model/advertisement")
+
 Component({
   properties: {
-    dataMap: {
-      type: Object,
-      value: {}
+    advertisement: {
+      type: Advertisement,
+      value: new Advertisement()
     },
   },
   data: {

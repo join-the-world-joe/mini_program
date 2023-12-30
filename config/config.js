@@ -17,6 +17,10 @@ class Config {
   // screen
   static PeriodOfScreenInitialisation = 100
   static PeriodOfScreenNormal = 500
+
+  static ThumbnailPrefix = 'thumbnail-';
+
+  static DefaultHttpRequestTimeout = 5000
 }
 
 module.exports = {

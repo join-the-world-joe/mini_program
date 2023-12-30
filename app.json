@@ -1,12 +1,17 @@
 {
   "pages": [
     "screen/login/login",
+    "screen/layout1/layout1",
+ 
     "screen/home/home",
+   
+    "layout/masonry/masonry",
+    "screen/layout/layout",
+   
     "screen/cart/cart",
     "screen/category/category",
     "screen/account/account",
-    "screen/register/register",
-    "screen/layout/layout"
+    "screen/register/register"
   ],
   "window": {
     "navigationBarBackgroundColor": "#eeeeee",

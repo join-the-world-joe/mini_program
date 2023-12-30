@@ -1,5 +1,4 @@
 const { Carousel } = require('../../cache/carousel')
-const { FetchIdListOfADOfCarousel } = require('../../common/business/advertisement/fetch_id_list_of_ad_of_carousel')
 const { Config } = require('../../config/config')
 const { Major } = require("../../common/route/major")
 const { Advertisement } = require('../../common/route/advertisement')
@@ -10,16 +9,19 @@ const { FetchVersionOfADOfCarouselRsp } = require('../../common/protocol/adverti
 const { Code } = require('../../common/code/code')
 const { Translator } = require('../../common/translator/translator')
 const { TitleOfLoading, TitleOfDeals, TitleOfCamping, TitleOfBarbecue, TitleOfSnacks } = require('../../common/language/language')
-const { FetchVersionOfADOfCarousel } = require('../../common/business/advertisement/fetch_version_of_ad_of_carousel')
-const { FetchRecordsOfADOfCarousel } = require('../../common/business/advertisement/fetch_records_of_ad_of_carousel')
 const { FetchRecordsOfADOfCarouselRsp } = require('../../common/protocol/advertisement/fetch_records_of_ad_of_carousel')
 var modelOfAdvertisement = require('../../model/advertisement')
-const { FetchVersionOfADOfDeals } = require('../../common/business/advertisement/fetch_version_of_ad_of_deals')
 const { FetchVersionOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_version_of_ad_of_deals')
-const { FetchIdListOfADOfDeals } = require('../../common/business/advertisement/fetch_id_list_of_ad_of_deals')
-const { FetchRecordsOfADOfDeals } = require('../../common/business/advertisement/fetch_records_of_ad_of_deals')
 const { FetchIdListOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_id_list_of_ad_of_deals')
 const { FetchRecordsOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_records_of_ad_of_deals')
+const {FetchVersionOfADOfCarouselProgress} = require('../../progress/fetch_version_of_ad_of_carousel_progress')
+const { FetchIdListOfADOfCarouselProgress } = require('../../progress/fetch_id_list_of_ad_of_carousel_progress')
+const { FetchRecordsOfADOfCarouselProgress } = require('../../progress/fetch_records_of_ad_of_carousel_progress')
+const { FetchVersionOfADOfDealsProgress } = require('../../progress/fetch_version_of_ad_of_deals_progress')
+const { FetchIdListOfADOfDealsProgress } = require('../../progress/fetch_id_list_of_ad_of_deals_progress')
+const { FetchRecordsOfADOfDealsProgress } = require('../../progress/fetch_records_of_ad_of_deals_progress')
+const {Menu} = require('../../common/macro/menu')
+
 Page({
 
   /**
@@ -28,9 +30,9 @@ Page({
   data: {
     from: 'home',
     hideMenu: true,
-    indexOfSubMenu: 1,
+    indexOfSubMenu: Menu.Deals,
     subMenuSelected: false,
-    loadMenuCompleted: false,
+    loadCompleted: false,
     versionOfADOfCarousel: 0,
     idListOfADOfCarousel: [],
     recordsOfADOfCarousel: new Object, // key: advertisement id, value: advertisement
@@ -43,160 +45,184 @@ Page({
     titleOfBarbecue: '',
     titleOfSnacks: '',
 
+    DealsOfMenu: Menu.Deals,
+    CompingOfMenu: Menu.Comping,
+    BarbecueOfMenu: Menu.Barbecue,
+    SnacksOfMenu: Menu.Snacks,
+
     hideCarousel: true,
-    loadCarouselCompleted: false,
-    versionOfADOfCarouselRequested: false,
-    versionOfADOfCarouselRequestTime: undefined,
-    versionOfADOfCarouselRequestCompleted: false,
-    idListOfADOfCarouselRequested: false,
-    idListOfADOfCarouselRequestTime: undefined,
-    idListOfADOfCarouselRequestCompleted: false,
-    recordsOfADOfCarouselRequested: false,
-    recordsOfADOfCarouselRequestTime: undefined,
-    recordsOfADOfCarouselRequestCompleted: false,
+    progressOfFetchVersionOfADOfCarousel: undefined,
+    progressOfFetchIdListOfADOfCarousel: undefined,
+    progressOfFetchRecordsOfADOfCarousel: undefined,
+    hasFigureOutArgumentOfFetchRecordsOfADOfCarousel: false,
 
     hideContent: true,
-    loadDealsCompleted: false,
-    versionOfADOfDealsRequested: false,
-    versionOfADOfDealsRequestTime: undefined,
-    versionOfADOfDealsRequestCompleted: false,
-    idListOfADOfDealsRequested: false,
-    idListOfADOfDealsRequestTime: undefined,
-    idListOfADOfDealsRequestCompleted: false,
-    recordsOfADOfDealsRequested: false,
-    recordsOfADOfDealsRequestTime: undefined,
-    recordsOfADOfDealsRequestCompleted: false,
+    progressOfFetchVersionOfADOfDeals: undefined,
+    progressOfFetchIdListOfADOfDeals: undefined,
+    progressOfFetchRecordsOfADOfDeals: undefined,
+    progressOfFetchRecordsOfADOfDeals: undefined,
+    hasFigureOutArgumentOfFetchRecordsOfADOfDeals: false,
   },
-  setup() {
-    Runtime.SetPeriod(Config.PeriodOfScreenInitialisation)
-    Runtime.SetObserve(this.observe)
-    Runtime.SetPeriodc(this.process)
+  reload() {
+    this.setData({
+      showLoading: false,
+      loadCompleted: false,
+      hideMenu: true,
+      hideCarousel: true,
+      hideContent: true,
+      // recordsOfADOfCarousel: new Object(),
+      recordsOfADOfDeals: new Object(),
+      hasFigureOutArgumentOfFetchRecordsOfADOfCarousel: false,
+      hasFigureOutArgumentOfFetchRecordsOfADOfDeals: false,
+    })
     if (!this.data.showLoading) {
       wx.showLoading({
         title: Translator.Translate(TitleOfLoading),
       })
-    }
-    // try to read the cache of carousel from local storage
-    var cache = wx.getStorageSync(Config.KeyOfCarousel)
-    if (cache.length > 0) {
-      try {
-        console.log("cache: ", cache)
-        var versionOfADOfCarousel = cache.version_of_ad_of_carousel
-        var idListOfADOfcarousel = cache.id_list_of_ad_of_carousel
-        this.setData({
-          versionOfADOfCarousel: versionOfADOfCarousel,
-          idListOfADOfCarousel: idListOfADOfcarousel
-        })
-      } catch(e) {
-        console.log('read from cache failure, err: ', e)
-        this.setData({
-          versionOfADOfCarousel: 0,
-          idListOfADOfCarousel: []
-        })
-      }
-    }
-  },
-  carousel() {
-    var caller = 'carousel'
-    if (this.data.versionOfADOfCarouselRequestCompleted &&
-      this.data.idListOfADOfCarouselRequestCompleted &&
-      this.data.recordsOfADOfCarouselRequestCompleted &&
-      !this.data.loadCarouselCompleted) {
-        this.setData({
-          hideCarousel: false,
-          loadCarouselCompleted: true,
-        })
-    }
-    if (!this.data.versionOfADOfCarouselRequested) {
-        // send request
-        FetchVersionOfADOfCarousel({from:this.data.from, caller: caller})
-        this.setData({
-          versionOfADOfCarouselRequested: true,
-          versionOfADOfCarouselRequestTime: Date.now()
-        })
-    }
-    if (this.data.versionOfADOfCarouselRequestCompleted &&
-      !this.data.idListOfADOfCarouselRequested) {
-        FetchIdListOfADOfCarousel({from: this.data.from,caller: caller})
-        this.setData({
-          idListOfADOfCarouselRequested: true,
-          idListOfADOfCarouselRequestTime: Date.now()
-        })
-    }
-    if (this.data.versionOfADOfCarouselRequestCompleted &&
-      this.data.idListOfADOfCarouselRequestCompleted &&
-      !this.data.recordsOfADOfCarouselRequested) {
-        FetchRecordsOfADOfCarousel({from: this.data.from,caller: caller, advertisementIdList:this.data.idListOfADOfCarousel})
-        this.setData({
-          recordsOfADOfCarouselRequested: true,
-          recordsOfADOfCarouselRequestTime: Date.now()
-        })
-    }
-  },
-  menu() {
-    var caller = 'menu'
-    if (this.data.loadCarouselCompleted &&
-      this.data.loadDealsCompleted &&
-      !this.data.loadMenuCompleted) {
       this.setData({
-        loadMenuCompleted: true,
-        hideMenu: false,
+        showLoading: true,
       })
     }
+    this.setData({
+      progressOfFetchVersionOfADOfCarousel: new FetchVersionOfADOfCarouselProgress(this.data.from),
+      progressOfFetchIdListOfADOfCarousel: new FetchIdListOfADOfCarouselProgress(this.data.from),
+      progressOfFetchRecordsOfADOfCarousel: new FetchRecordsOfADOfCarouselProgress(this.data.from),
+      progressOfFetchVersionOfADOfDeals: new FetchVersionOfADOfDealsProgress(this.data.from),
+      progressOfFetchIdListOfADOfDeals: new FetchIdListOfADOfDealsProgress(this.data.from),
+      progressOfFetchRecordsOfADOfDeals: new FetchRecordsOfADOfDealsProgress(this.data.from),
+    })
+    Runtime.SetPeriod(Config.PeriodOfScreenInitialisation)
+    Runtime.SetObserve(this.observe)
+    Runtime.SetPeriodc(this.progress)
   },
-  content() {
-    var caller = 'content'
-    if (!this.data.subMenuSelected && 
-      this.data.indexOfSubMenu == 1 &&
-      this.data.loadCarouselCompleted) {
-      if (this.data.versionOfADOfDealsRequestCompleted &&
-        this.data.idListOfADOfDealsRequestCompleted &&
-        this.data.recordsOfADOfDealsRequestCompleted &&
-        !this.data.loadDealsCompleted) {
-          this.setData({
-            hideContent: false,
-            loadDealsCompleted: true,
-          })
-      }
-      if (!this.data.versionOfADOfDealsRequested) {
-        FetchVersionOfADOfDeals({from:this.data.from, caller:caller})
-        this.setData({
-          versionOfADOfDealsRequested: true,
-          versionOfADOfDealsRequestTime: Date.now()
-        })
-      }
-      if (this.data.versionOfADOfDealsRequestCompleted &&
-        !this.data.idListOfADOfDealsRequested) {
-          FetchIdListOfADOfDeals({from: this.data.from,caller: caller})
-          this.setData({
-            idListOfADOfDealsRequested: true,
-            idListOfADOfDealsRequestTime: Date.now()
-          })
-      }
-      if (this.data.versionOfADOfDealsRequestCompleted &&
-        this.data.idListOfADOfDealsRequestCompleted &&
-        !this.data.recordsOfADOfDealsRequested) {
-          FetchRecordsOfADOfDeals({from: this.data.from,caller: caller, advertisementIdList:this.data.idListOfADOfDeals})
-          this.setData({
-            recordsOfADOfDealsRequested: true,
-            recordsOfADOfDealsRequestTime: Date.now()
-          })
-      }
+  onTest() {
+    console.log('onTest')
+    this.reload()
+  },
+  complete() {
+    console.log('complete')
+    if (!this.data.loadCompleted) {
+      this.setData({
+        loadCompleted: true,
+      })
     }
-  },
-  checkLoading() {
-    if (this.data.loadCarouselCompleted &&
-      this.data.loadDealsCompleted &&
-      this.data.loadMenuCompleted) {
+    if (this.data.showLoading) {
+      this.setData({
+        showLoading: false,
+      })
       wx.hideLoading()
     }
+    Runtime.SetPeriod(Config.PeriodOfScreenNormal)
+    Runtime.SetPeriodc(undefined)
   },
-  process() {
-    this.carousel()
-    this.menu()
-    this.content()
-    this.checkLoading()
-    // if all completed, set period to normal
+  setup() {
+    // initialization
+    this.reload()
+  
+    // try to read the cache of carousel from local storage
+    // var cache = wx.getStorageSync(Config.KeyOfCarousel)
+    // if (cache.length > 0) {
+    //   try {
+    //     console.log("cache: ", cache)
+    //     var versionOfADOfCarousel = cache.version_of_ad_of_carousel
+    //     var idListOfADOfcarousel = cache.id_list_of_ad_of_carousel
+    //     this.setData({
+    //       versionOfADOfCarousel: versionOfADOfCarousel,
+    //       idListOfADOfCarousel: idListOfADOfcarousel
+    //     })
+    //   } catch(e) {
+    //     console.log('read from cache failure, err: ', e)
+    //     this.setData({
+    //       versionOfADOfCarousel: 0,
+    //       idListOfADOfCarousel: []
+    //     })
+    //   }
+    // }
+  },
+  progress() {
+    if (this.data.loadCompleted) {
+      return
+    }
+
+    var ret = this.data.progressOfFetchVersionOfADOfCarousel.Progress()
+    if (ret < 0) {
+      this.complete()
+      return
+    }
+    if (ret > 0) {
+      return
+    }
+
+    ret = this.data.progressOfFetchIdListOfADOfCarousel.Progress()
+    if (ret < 0) {
+      this.complete()
+      return
+    }
+    if (ret > 0) {
+      return
+    }
+
+    if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfCarousel) {
+      this.data.progressOfFetchRecordsOfADOfCarousel.SetAdvertisementIdList(this.data.idListOfADOfCarousel)
+      this.data.hasFigureOutArgumentOfFetchRecordsOfADOfCarousel = true
+    }
+
+    ret = this.data.progressOfFetchRecordsOfADOfCarousel.Progress()
+    if (ret < 0) {
+      this.complete()
+      return
+    }
+    if (ret > 0) {
+      return
+    }
+
+    if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
+      var ret = this.data.progressOfFetchVersionOfADOfDeals.Progress()
+      if (ret < 0) {
+        this.complete()
+        return
+      }
+      if (ret > 0) {
+        return
+      }
+  
+      var ret = this.data.progressOfFetchIdListOfADOfDeals.Progress()
+      if (ret < 0) {
+        this.complete()
+        return
+      }
+      if (ret > 0) {
+        return
+      }
+  
+      if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals) {
+        this.data.progressOfFetchRecordsOfADOfDeals.SetAdvertisementIdList(this.data.idListOfADOfDeals)
+        this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals = true
+      }
+  
+      var ret = this.data.progressOfFetchRecordsOfADOfDeals.Progress()
+      if (ret < 0) {
+        this.complete()
+        return
+      }
+      if (ret > 0) {
+        return
+      }
+    } else if (this.data.indexOfSubMenu == Menu.Comping) { // Comping
+
+    } else if (this.data.indexOfSubMenu == Menu.Barbecue) { // Barbecue
+
+    } else { // Snacks
+      // Snacks
+    }
+
+    this.setData({
+      hideMenu: false,
+      hideCarousel: false,
+      hideContent: false,
+    })
+
+    this.complete()
   },
   observe(packet) {
     try{
@@ -230,7 +256,7 @@ Page({
       } else if (major == Major.Advertisement &&
         minor == Advertisement.FetchRecordsOfADOfDealsRsp) {
         this.fetchRecordsOfADOfDealsHandler(packet)
-      }else {
+      } else {
         Log.Debug({
           major: major,
           minor: minor,
@@ -252,7 +278,7 @@ Page({
     }
   },
   fetchRecordsOfADOfDealsHandler(packet) {
-    var caller = 'fetchRecordsOfADOfDeals'
+    var caller = 'fetchRecordsOfADOfDealsHandler'
     var response = (new FetchRecordsOfADOfDealsRsp).FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
@@ -261,21 +287,20 @@ Page({
       caller: caller,
       message: 'code: ' + response.GetCode(),
     })
+    if (this.data.progressOfFetchRecordsOfADOfDeals != undefined) {
+      this.data.progressOfFetchRecordsOfADOfDeals.Respond(response)
+    }
     if (response.GetCode() == Code.OK) {
       // success
-      // console.log('recordsOfADOfCarouse: ', response.GetRecordsOfADOfCarousel())
       var records = response.GetRecordsOfADOfDeals()
       for (var i=0; i<records.length; i++) {
         var advertisement = (new modelOfAdvertisement.Advertisement()).FromJson(records[i])
-        var temp = this.data.recordsOfADOfCarousel
+        var temp = this.data.recordsOfADOfDeals
         temp[advertisement.advertisement_id] = advertisement
         this.setData({
           recordsOfADOfDeals:temp,
         })
       }
-      this.setData({
-        recordsOfADOfDealsRequestCompleted: true,
-      })
       console.log(this.data.recordsOfADOfDeals)
     } else {
       // error occurs
@@ -291,12 +316,14 @@ Page({
       caller: caller,
       message: 'code: ' + response.GetCode(),
     })
+    if (this.data.progressOfFetchIdListOfADOfDeals != null) {
+      this.data.progressOfFetchIdListOfADOfDeals.Respond(response)
+    }
     if (response.GetCode() == Code.OK) {
       // success
       this.setData({
         versionOfADOfDeals: response.version_of_ad_of_deals,
         idListOfADOfDeals: response.id_list_of_ad_of_deals,
-        idListOfADOfDealsRequestCompleted: true,
       })
     } else {
       // error occurs
@@ -312,11 +339,13 @@ Page({
       caller: caller,
       message: 'code: ' + response.GetCode(),
     })
+    if (this.data.progressOfFetchVersionOfADOfDeals != undefined) {
+      this.data.progressOfFetchVersionOfADOfDeals.Respond(response)
+    }
     if (response.GetCode() == Code.OK) { 
       // success
       this.setData({
         versionOfADOfDeals: response.GetVersionOfADOfDeals(),
-        versionOfADOfDealsRequestCompleted: true,
       })
     } else {
       // error occurs
@@ -332,6 +361,9 @@ Page({
       caller: caller,
       message: 'code: ' + response.GetCode(),
     })
+    if (this.data.progressOfFetchRecordsOfADOfCarousel != undefined) {
+      this.data.progressOfFetchRecordsOfADOfCarousel.Respond(response)
+    }
     if (response.GetCode() == Code.OK) {
       // success
       // console.log('recordsOfADOfCarouse: ', response.GetRecordsOfADOfCarousel())
@@ -344,9 +376,6 @@ Page({
           recordsOfADOfCarousel:temp,
         })
       }
-      this.setData({
-        recordsOfADOfCarouselRequestCompleted: true,
-      })
       // console.log(this.data.recordsOfADOfCarousel)
     } else {
       // error occurs
@@ -362,11 +391,13 @@ Page({
       caller: caller,
       message: 'code: ' + response.GetCode(),
     })
+    if (this.data.progressOfFetchVersionOfADOfCarousel != undefined) {
+      this.data.progressOfFetchVersionOfADOfCarousel.Respond(response)
+    }
     if (response.GetCode() == Code.OK) { 
       // success
       this.setData({
         versionOfADOfCarousel: response.GetVersionOfADOfCarousel(),
-        versionOfADOfCarouselRequestCompleted: true,
       })
     } else {
       // error occurs
@@ -382,12 +413,14 @@ Page({
       caller: caller,
       message: 'code: ' + response.GetCode(),
     })
+    if (this.data.progressOfFetchIdListOfADOfCarousel != undefined) {
+      this.data.progressOfFetchIdListOfADOfCarousel.Respond(response)
+    }
     if (response.GetCode() == Code.OK) {
       // success
       this.setData({
         versionOfADOfCarousel: response.version_of_ad_of_carousel,
         idListOfADOfCarousel: response.id_list_of_ad_of_carousel,
-        idListOfADOfCarouselRequestCompleted: true,
       })
     } else {
       // error occurs
@@ -396,25 +429,25 @@ Page({
   onTapDeals() {
     console.log('onTapDeals')
     this.setData({
-      indexOfSubMenu:1,
+      indexOfSubMenu:Menu.Deals,
     })
   },
   onTapComping() {
     console.log('onTapComping')
     this.setData({
-      indexOfSubMenu:2,
+      indexOfSubMenu:Menu.Comping,
     })
   },
   onTapBarbecue() {
     console.log('onTapBarbecue')
     this.setData({
-      indexOfSubMenu:3,
+      indexOfSubMenu:Menu.Barbecue,
     })
   },
   onTapSnacks() {
     console.log('onTapSnacks')
     this.setData({
-      indexOfSubMenu:4,
+      indexOfSubMenu:Menu.Snacks,
     })
   },
   onSet() {

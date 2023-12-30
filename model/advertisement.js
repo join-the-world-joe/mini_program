@@ -1,3 +1,4 @@
+const { Config } = require('../config/config')
 const {base64_decode} = require('../plugin/base64/base64')
 
 class Advertisement {
@@ -51,6 +52,10 @@ class Advertisement {
       var obj = JSON.parse(json.image)
       for (const key in obj) {
         // console.log('obj[key]:', obj[key])
+        if (key.includes(Config.ThumbnailPrefix)) {
+          this.image['0'] = obj[key]
+          continue
+        }
         this.image[key] = obj[key]
       }
     }

@@ -1,12 +1,19 @@
 <view class="container">
-  <view class="child1">
-    <image class="image" src="/asset/image/apple.png"></image>
+  <view class="child6">
+    <!-- <image class="image" src="/asset/image/apple.png"></image> -->
 </view>
-  <view class="child2">
-    <image class="image" src="/asset/image/orange.png"></image>
+  <view class="child7">
+    <!-- <image class="image" src="/asset/image/orange.png"></image> -->
   </view>
-  <view class="child3">
-    <image class="image" src="/asset/image/grape.png"></image>
+  <view class="child8">
+    <!-- <image class="image" src="/asset/image/grape.png"></image> -->
   </view>
-
+  <view class="child4"></view>
+  <view class="child5"></view>
+  <view class="child9">
+    <text class="t11">
+    
+    </text>
+  </view>
+  
 </view>
