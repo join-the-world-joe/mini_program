@@ -1,6 +1,6 @@
 <view class="container">
   <block class="item">
-    <image class="image" src="{{advertisement.image[1]}}"></image>
+    <image class="image" src="{{advertisement.image[1]}}" bindload="loadImage" ></image>
     <text>产地：{{advertisement.place_of_origin}}</text>
     <text>{{advertisement.selling_points}}</text>
 

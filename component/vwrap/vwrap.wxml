@@ -1,5 +1,5 @@
 <view class="component_container">
-  <view class="column_container">
+  <view class="left_column_container">
     <block wx:for="{{leftSideDataMap}}" wx:key="advertisement_id">
       <view class="left_card_container" data-id="{{item.advertisement_id}}"  bind:tap="tapItem">
         <vcard advertisement="{{item}}">
@@ -8,10 +8,11 @@
     </block>
   </view>
 
-  <view class="column_container">
+  <view class="right_column_container">
     <block wx:for="{{rightSideDataMap}}" wx:key="advertisement_id">
       <view class="right_card_container" data-id="{{item.advertisement_id}}"  bind:tap="tapItem">
-        <image class="card" src="{{item.image[0]}}" />
+        <vcard advertisement="{{item}}">
+        </vcard>
       </view>    
     </block>
   </view>
