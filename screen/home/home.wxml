@@ -16,11 +16,11 @@
   <!-- <button bind:tap="onSet"> Set </button>
    <button bind:tap="onGet"> Get </button> 
    <button bind:tap="onClear"> Clear </button>  -->
+    
     <button bind:tap="onTest">Test</button>
-   <!-- <wrap dataMap="{{recordsOfADOfDeals}}">
-   </wrap> -->
+
     <view class="content_container" hidden="{{hideContent}}">
-      <vwrap leftSideDataMap="{{recordsOfADOfCarousel}}" rightSideDataMap="{{recordsOfADOfCarousel}}">
+      <vwrap leftSideDataMap="{{leftHalfOfRecordsOfADOfDeals}}" rightSideDataMap="{{rightHalfOfRecordsOfADOfDeals}}">
       </vwrap>
     </view>
   </view>

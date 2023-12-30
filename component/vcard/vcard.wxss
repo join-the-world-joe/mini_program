@@ -1,4 +1,4 @@
-.container {
+.component_container {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -6,15 +6,24 @@
   /* align-items: center; */
   background-color: white;
   border-radius: 20px;
+  /* border: 1px solid #ddd; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  /* overflow: hidden; */
 }
 
-.item {
+.component_item {
   width: 100%;
 }
 
 .image {
   width: 100%;
-  height: 350rpx;
-  border-top-left-radius: 20px; 
-  border-top-right-radius: 20px;
+  /* height: 350rpx; */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.price_container {
+  font-size: 14px;
+  color: #f00; /* You can customize the color */
+  margin-bottom: 10px;
 }

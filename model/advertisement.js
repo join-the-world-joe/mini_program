@@ -56,6 +56,10 @@ class Advertisement {
           this.image['0'] = obj[key]
           continue
         }
+        if (this.image['1'] == undefined) {
+          this.image['1'] = obj[key]
+        }
+        
         this.image[key] = obj[key]
       }
     }

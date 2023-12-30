@@ -35,10 +35,12 @@ Page({
     loadCompleted: false,
     versionOfADOfCarousel: 0,
     idListOfADOfCarousel: [],
-    recordsOfADOfCarousel: new Object, // key: advertisement id, value: advertisement
+    recordsOfADOfCarousel: new Object(), // key: advertisement id, value: advertisement
     versionOfADOfDeals: 0,
     idListOfADOfDeals: [],
     recordsOfADOfDeals: new Object,
+    leftHalfOfRecordsOfADOfDeals: new Object(),
+    rightHalfOfRecordsOfADOfDeals: new Object(),
     showLoading: false,
     titleOfDeals: '',
     titleOfCamping: '',
@@ -63,7 +65,7 @@ Page({
     progressOfFetchRecordsOfADOfDeals: undefined,
     hasFigureOutArgumentOfFetchRecordsOfADOfDeals: false,
   },
-  reload() {
+  reloadScreen() {
     this.setData({
       showLoading: false,
       loadCompleted: false,
@@ -97,7 +99,7 @@ Page({
   },
   onTest() {
     console.log('onTest')
-    this.reload()
+    this.reloadScreen()
   },
   complete() {
     console.log('complete')
@@ -117,7 +119,7 @@ Page({
   },
   setup() {
     // initialization
-    this.reload()
+    this.reloadScreen()
   
     // try to read the cache of carousel from local storage
     // var cache = wx.getStorageSync(Config.KeyOfCarousel)
@@ -139,27 +141,23 @@ Page({
     //   }
     // }
   },
-  progress() {
-    if (this.data.loadCompleted) {
-      return
+  reloadCarouselProgress() {
+    if (!this.data.showLoading) {
+      wx.showLoading({
+        title: Translator.Translate(TitleOfLoading),
+      })
+      this.setData({
+        showLoading: true,
+      })
     }
-
     var ret = this.data.progressOfFetchVersionOfADOfCarousel.Progress()
-    if (ret < 0) {
-      this.complete()
-      return
-    }
-    if (ret > 0) {
-      return
+    if (ret != 0) {
+      return ret
     }
 
-    ret = this.data.progressOfFetchIdListOfADOfCarousel.Progress()
-    if (ret < 0) {
-      this.complete()
-      return
-    }
-    if (ret > 0) {
-      return
+    var ret = this.data.progressOfFetchIdListOfADOfCarousel.Progress()
+    if (ret != 0) {
+      return ret
     }
 
     if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfCarousel) {
@@ -168,6 +166,45 @@ Page({
     }
 
     ret = this.data.progressOfFetchRecordsOfADOfCarousel.Progress()
+    if (ret != 0) {
+      return ret
+    }
+  },
+  reloadDealsProgress() {
+    if (!this.data.showLoading) {
+      wx.showLoading({
+        title: Translator.Translate(TitleOfLoading),
+      })
+      this.setData({
+        showLoading: true,
+      })
+    }
+    var ret = this.data.progressOfFetchVersionOfADOfDeals.Progress()
+    if (ret != 0) {
+      return ret
+    }
+
+    var ret = this.data.progressOfFetchIdListOfADOfDeals.Progress()
+    if (ret != 0) {
+      return ret
+    }
+
+    if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals) {
+      this.data.progressOfFetchRecordsOfADOfDeals.SetAdvertisementIdList(this.data.idListOfADOfDeals)
+      this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals = true
+    }
+
+    var ret = this.data.progressOfFetchRecordsOfADOfDeals.Progress()
+    if (ret != 0) {
+      return ret
+    }
+  },
+  progress() {
+    if (this.data.loadCompleted) {
+      return
+    }
+
+    var ret = this.reloadCarouselProgress() 
     if (ret < 0) {
       this.complete()
       return
@@ -177,30 +214,7 @@ Page({
     }
 
     if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
-      var ret = this.data.progressOfFetchVersionOfADOfDeals.Progress()
-      if (ret < 0) {
-        this.complete()
-        return
-      }
-      if (ret > 0) {
-        return
-      }
-  
-      var ret = this.data.progressOfFetchIdListOfADOfDeals.Progress()
-      if (ret < 0) {
-        this.complete()
-        return
-      }
-      if (ret > 0) {
-        return
-      }
-  
-      if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals) {
-        this.data.progressOfFetchRecordsOfADOfDeals.SetAdvertisementIdList(this.data.idListOfADOfDeals)
-        this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals = true
-      }
-  
-      var ret = this.data.progressOfFetchRecordsOfADOfDeals.Progress()
+      ret = this.reloadDealsProgress()
       if (ret < 0) {
         this.complete()
         return
@@ -301,6 +315,23 @@ Page({
           recordsOfADOfDeals:temp,
         })
       }
+      var leftHalf = new Object();
+      var rightHanlf = new Object();
+      var current = 0;
+      for (var e in this.data.recordsOfADOfDeals) {
+        if (current % 2 == 0) {
+          leftHalf[e] = this.data.recordsOfADOfDeals[e]
+        } else {
+          rightHanlf[e] = this.data.recordsOfADOfDeals[e]
+        }
+        current++
+      }
+      console.log('leftHalf: ', leftHalf)
+      console.log('rightHanlf: ', rightHanlf)
+      this.setData({
+        leftHalfOfRecordsOfADOfDeals: leftHalf,
+        rightHalfOfRecordsOfADOfDeals: rightHanlf,
+      })
       console.log(this.data.recordsOfADOfDeals)
     } else {
       // error occurs
@@ -428,9 +459,13 @@ Page({
   },
   onTapDeals() {
     console.log('onTapDeals')
+    if (this.data.indexOfSubMenu == Menu.Deals) {
+      return
+    }
     this.setData({
-      indexOfSubMenu:Menu.Deals,
+      hideContent:true
     })
+    // start progress now
   },
   onTapComping() {
     console.log('onTapComping')
