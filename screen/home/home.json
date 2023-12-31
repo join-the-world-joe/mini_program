@@ -1,4 +1,5 @@
 {
+  "enablePullDownRefresh": true,
   "usingComponents": {
     "carousel": "/component/carousel/carousel",
     "wrap": "/component/wrap/wrap",

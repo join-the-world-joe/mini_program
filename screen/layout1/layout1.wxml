@@ -1,18 +1,4 @@
-<view class="container">
-  <view class="row_container">
-    <view class="item1"></view>
-    <view class="item2"></view>
-    <view class="item3"></view>
-    <view class="item1"></view>
-    <view class="item3"></view>
-    <view class="item1"></view>
-  </view>
-  <view class="row_container">
-    <view class="item7"></view>
-    <view class="item5"></view>
-    <view class="item4"></view>
-    <view class="item3"></view>
-    <view class="item2"></view>
-    <view class="item1"></view>
-  </view>
+<view class="content" animation="{{animationData}}">
+  <text>这是一段文本内容</text>
 </view>
+<button bindtap="fadeOut">淡出</button>

@@ -18,7 +18,7 @@ page {
 
 .menu_container {
   width: 100%;
-  font-size: 17px;
+  font-size: 19px;
   margin-top: 10px;
   display: flex;
   justify-content: center;

@@ -1,66 +1,19 @@
-// screen/layout1/layout1.js
 Page({
-
-  /**
-   * Page initial data
-   */
   data: {
-
+    animationData: {}
   },
 
-  /**
-   * Lifecycle function--Called when page load
-   */
-  onLoad(options) {
+  fadeOut: function () {
+    let animation = wx.createAnimation({
+      duration: 500, // 过渡时间
+      timingFunction: 'ease-in-out', // 缓动函数，可根据需要调整
+    });
 
-  },
+    // 设置淡出效果
+    animation.opacity(0).step();
 
-  /**
-   * Lifecycle function--Called when page is initially rendered
-   */
-  onReady() {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page show
-   */
-  onShow() {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page hide
-   */
-  onHide() {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page unload
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * Page event handler function--Called when user drop down
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * Called when page reach bottom
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * Called when user click on the top right corner to share
-   */
-  onShareAppMessage() {
-
+    this.setData({
+      animationData: animation.export()
+    });
   }
-})
+});

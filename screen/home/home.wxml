@@ -1,8 +1,10 @@
-<scroll-view class="screen_container" enable-flex="true" scroll-y>
+<scroll-view class="screen_container" enablePullDownRefresh="true" enable-flex="true" scroll-y>
   <view>
+
     <view hidden="{{hideCarousel}}" class="carousel_container">
       <carousel dataMap="{{recordsOfADOfCarousel}}"> </carousel>
     </view>
+
     <view hidden="{{hideMenu}}" class="menu_container">
       <view bind:tap="onTapDeals" style="color:{{indexOfSubMenu == DealsOfMenu ? 'blue' : 'black'}}" class="menu_item">{{titleOfDeals}}
       </view>
@@ -17,11 +19,17 @@
    <button bind:tap="onGet"> Get </button> 
    <button bind:tap="onClear"> Clear </button>  -->
     
-    <button bind:tap="onTest">Test</button>
+    <!-- <button bind:tap="onTest">Test</button> -->
 
-    <view class="content_container" hidden="{{hideContent}}">
-      <vwrap leftSideDataMap="{{leftHalfOfRecordsOfADOfDeals}}" rightSideDataMap="{{rightHalfOfRecordsOfADOfDeals}}">
+    <view class="content_container" hidden="{{indexOfSubMenu != DealsOfMenu}}">
+      <vwrap leftSideDataMap="{{leftHalfRecordsOfADOfDeals}}" rightSideDataMap="{{rightHalfRecordsOfADOfDeals}}">
       </vwrap>
     </view>
+
+    <view class="content_container" hidden="{{indexOfSubMenu != CompingOfMenu}}">
+      <vwrap leftSideDataMap="{{leftHalfRecordsOfADOfComping}}" rightSideDataMap="{{rightHalfRecordsOfADOfComping}}">
+      </vwrap>
+    </view>
+
   </view>
 </scroll-view>

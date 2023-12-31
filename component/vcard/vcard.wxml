@@ -1,12 +1,20 @@
 <view class="component_container">
   <block class="component_item">
-    <image class="image" style="width:{{imageWidth}}rpx; height:{{imageHeight}}rpx;" src="{{advertisement.image[1]}}" bindload="loadImage" ></image>
     <!-- <text>产地：{{advertisement.place_of_origin}}</text> -->
-    <text>{{advertisement.selling_points}}</text>
+    <!-- <text>库存:{{advertisement.stock}}</text> -->
 
+    <image class="image" style="width:{{imageWidth}}rpx; height:{{imageHeight}}rpx;" src="{{advertisement.image[1]}}" bindload="loadImage" ></image>
+    
+    <view class="selling_points_container">
+      <!-- <text>{{advertisement.selling_points}}</text> -->
+      <block wx:for="{{advertisement.selling_points}}">
+        <text class="selling_point">{{item}}</text>
+      </block>
+    </view>
+    
     <view class="price_container">
-      <text>¥:{{advertisement.selling_price}}</text>
-      <!-- <text>库存:{{advertisement.stock}}</text> -->
+      <text class="currency_symbol">¥</text>
+      <text class="price">{{advertisement.selling_price}}</text>
     </view>
   </block>
 </view>

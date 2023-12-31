@@ -1,4 +1,5 @@
 <view class="component_container">
+
   <view class="left_column_container">
     <block wx:for="{{leftSideDataMap}}" wx:key="advertisement_id">
       <view class="left_card_container" data-id="{{item.advertisement_id}}"  bind:tap="tapItem">
@@ -16,4 +17,5 @@
       </view>    
     </block>
   </view>
+  
 </view>

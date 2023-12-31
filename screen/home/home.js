@@ -29,62 +29,81 @@ Page({
    */
   data: {
     from: 'home',
-    hideMenu: true,
-    indexOfSubMenu: Menu.Deals,
-    subMenuSelected: false,
+    showLoading: false,
     loadCompleted: false,
+    indexOfSubMenu: Menu.Deals,
+    hideMenu: true,
+    subMenuSelected: false,
     versionOfADOfCarousel: 0,
     idListOfADOfCarousel: [],
     recordsOfADOfCarousel: new Object(), // key: advertisement id, value: advertisement
     versionOfADOfDeals: 0,
     idListOfADOfDeals: [],
     recordsOfADOfDeals: new Object,
-    leftHalfOfRecordsOfADOfDeals: new Object(),
-    rightHalfOfRecordsOfADOfDeals: new Object(),
-    showLoading: false,
-    titleOfDeals: '',
-    titleOfCamping: '',
-    titleOfBarbecue: '',
-    titleOfSnacks: '',
-
-    DealsOfMenu: Menu.Deals,
-    CompingOfMenu: Menu.Comping,
-    BarbecueOfMenu: Menu.Barbecue,
-    SnacksOfMenu: Menu.Snacks,
+    leftHalfRecordsOfADOfDeals: new Object,
+    rightHalfRecordsOfADOfDeals: new Object,
+    leftHalfRecordsOfADOfComping: new Object,
+    rightHalfRecordsOfADOfComping: new Object,
 
     hideCarousel: true,
+    loadCarouselCompleted: false,
     progressOfFetchVersionOfADOfCarousel: undefined,
     progressOfFetchIdListOfADOfCarousel: undefined,
     progressOfFetchRecordsOfADOfCarousel: undefined,
     hasFigureOutArgumentOfFetchRecordsOfADOfCarousel: false,
 
     hideContent: true,
+    loadDealsCompleted: false,
     progressOfFetchVersionOfADOfDeals: undefined,
     progressOfFetchIdListOfADOfDeals: undefined,
     progressOfFetchRecordsOfADOfDeals: undefined,
     progressOfFetchRecordsOfADOfDeals: undefined,
     hasFigureOutArgumentOfFetchRecordsOfADOfDeals: false,
+
+    loadCompingCompleted: false,
+
+    loadBarbecueCompleted: false,
+
+    loadSnacksCompleted: false,
+
+    titleOfDeals: '',
+    titleOfCamping: '',
+    titleOfBarbecue: '',
+    titleOfSnacks: '',
+    DealsOfMenu: Menu.Deals,
+    CompingOfMenu: Menu.Comping,
+    BarbecueOfMenu: Menu.Barbecue,
+    SnacksOfMenu: Menu.Snacks,
+  },
+  onPullDownRefresh:function() {
+    console.log('onPullDownRefresh')
+    // 模拟异步请求数据的过程
+    setTimeout(() => {
+      // this.loadData();
+      this.reloadScreen()
+
+      // 数据请求完成后调用停止下拉刷新的方法
+      wx.stopPullDownRefresh();
+    }, 1000);
   },
   reloadScreen() {
     this.setData({
+      active: false,
       showLoading: false,
       loadCompleted: false,
       hideMenu: true,
       hideCarousel: true,
       hideContent: true,
-      // recordsOfADOfCarousel: new Object(),
+      loadCarouselCompleted: false,
+      loadDealsCompleted: false,
+      loadCompingCompleted: false,
+      loadBarbecueCompleted: false,
+      loadSnacksCompleted: false,
+      recordsOfADOfCarousel: new Object(),
       recordsOfADOfDeals: new Object(),
       hasFigureOutArgumentOfFetchRecordsOfADOfCarousel: false,
       hasFigureOutArgumentOfFetchRecordsOfADOfDeals: false,
     })
-    if (!this.data.showLoading) {
-      wx.showLoading({
-        title: Translator.Translate(TitleOfLoading),
-      })
-      this.setData({
-        showLoading: true,
-      })
-    }
     this.setData({
       progressOfFetchVersionOfADOfCarousel: new FetchVersionOfADOfCarouselProgress(this.data.from),
       progressOfFetchIdListOfADOfCarousel: new FetchIdListOfADOfCarouselProgress(this.data.from),
@@ -142,14 +161,6 @@ Page({
     // }
   },
   reloadCarouselProgress() {
-    if (!this.data.showLoading) {
-      wx.showLoading({
-        title: Translator.Translate(TitleOfLoading),
-      })
-      this.setData({
-        showLoading: true,
-      })
-    }
     var ret = this.data.progressOfFetchVersionOfADOfCarousel.Progress()
     if (ret != 0) {
       return ret
@@ -169,16 +180,11 @@ Page({
     if (ret != 0) {
       return ret
     }
+    this.setData({
+      loadCarouselCompleted: true
+    })
   },
   reloadDealsProgress() {
-    if (!this.data.showLoading) {
-      wx.showLoading({
-        title: Translator.Translate(TitleOfLoading),
-      })
-      this.setData({
-        showLoading: true,
-      })
-    }
     var ret = this.data.progressOfFetchVersionOfADOfDeals.Progress()
     if (ret != 0) {
       return ret
@@ -198,29 +204,43 @@ Page({
     if (ret != 0) {
       return ret
     }
+    this.setData({
+      loadDealsCompleted: true
+    })
   },
   progress() {
     if (this.data.loadCompleted) {
       return
     }
 
-    var ret = this.reloadCarouselProgress() 
-    if (ret < 0) {
-      this.complete()
-      return
-    }
-    if (ret > 0) {
-      return
+    if (!this.data.showLoading) {
+      wx.showLoading({
+        title: Translator.Translate(TitleOfLoading),
+      })
+      this.setData({
+        showLoading: true,
+      })
     }
 
-    if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
-      ret = this.reloadDealsProgress()
-      if (ret < 0) {
-        this.complete()
+    if (!this.data.loadCarouselCompleted) {
+      var ret = this.reloadCarouselProgress() 
+      if (ret < 0 || ret > 0) {
+        if (ret < 0) {
+          this.complete()
+        }
         return
       }
-      if (ret > 0) {
-        return
+    }
+    
+    if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
+      if (!this.data.loadDealsCompleted) {
+        ret = this.reloadDealsProgress()
+        if (ret < 0 || ret > 0) {
+          if (ret < 0) {
+            this.complete()
+          }
+          return
+        }
       }
     } else if (this.data.indexOfSubMenu == Menu.Comping) { // Comping
 
@@ -316,21 +336,25 @@ Page({
         })
       }
       var leftHalf = new Object();
-      var rightHanlf = new Object();
+      var rightHalf = new Object();
       var current = 0;
       for (var e in this.data.recordsOfADOfDeals) {
         if (current % 2 == 0) {
           leftHalf[e] = this.data.recordsOfADOfDeals[e]
         } else {
-          rightHanlf[e] = this.data.recordsOfADOfDeals[e]
+          rightHalf[e] = this.data.recordsOfADOfDeals[e]
         }
         current++
       }
       console.log('leftHalf: ', leftHalf)
-      console.log('rightHanlf: ', rightHanlf)
+      console.log('rightHalf: ', rightHalf)
       this.setData({
-        leftHalfOfRecordsOfADOfDeals: leftHalf,
-        rightHalfOfRecordsOfADOfDeals: rightHanlf,
+        leftHalfRecordsOfADOfDeals: leftHalf,
+        rightHalfRecordsOfADOfDeals: rightHalf
+      })
+      this.setData({
+        rightHalfRecordsOfADOfComping: leftHalf,
+        leftHalfRecordsOfADOfComping: rightHalf
       })
       console.log(this.data.recordsOfADOfDeals)
     } else {
@@ -463,14 +487,16 @@ Page({
       return
     }
     this.setData({
-      hideContent:true
+      indexOfSubMenu: Menu.Deals,
     })
-    // start progress now
   },
   onTapComping() {
     console.log('onTapComping')
+    if (this.data.indexOfSubMenu == Menu.Comping) {
+      return
+    }
     this.setData({
-      indexOfSubMenu:Menu.Comping,
+      indexOfSubMenu: Menu.Comping,
     })
   },
   onTapBarbecue() {
