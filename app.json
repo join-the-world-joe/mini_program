@@ -1,13 +1,11 @@
 {
   "pages": [
     "screen/login/login",
-    "screen/home/home",
-
-    "screen/layout1/layout1",
-   
-    "layout/masonry/masonry",
+    "screen/carousel/carousel",
     "screen/layout/layout",
-   
+    "screen/layout1/layout1",
+    "screen/home/home",
+    "layout/masonry/masonry",
     "screen/cart/cart",
     "screen/category/category",
     "screen/account/account",

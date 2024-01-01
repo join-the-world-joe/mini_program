@@ -12,9 +12,6 @@ Component({
     imageHeight: 0,
   },
   methods:{
-    tapItem: function(event) {
-      console.log(event.currentTarget.dataset.id)
-    },
     loadImage: function(e) {
       const width = e.detail.width;
       const height = e.detail.height;

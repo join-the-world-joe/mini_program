@@ -1,4 +1,12 @@
-<view class="content" animation="{{animationData}}">
-  <text>这是一段文本内容</text>
+<!-- pages/index/index.wxml -->
+
+<view class="swiper-container">
+  <swiper class="swiper" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+    <block wx:for="{{imageUrls}}" wx:key="index">
+      <swiper-item>
+        <image src="{{item}}" class="swiper-image" ></image>
+      </swiper-item>
+    </block>
+  </swiper>
+  <view class="add-to-cart-btn" bindtap="addToCart">加入购物车</view>
 </view>
-<button bindtap="fadeOut">淡出</button>

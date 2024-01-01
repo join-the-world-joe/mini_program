@@ -1,66 +1,18 @@
-// screen/layout/layout.js
+// pages/index/index.js
+
 Page({
-
-  /**
-   * Page initial data
-   */
   data: {
-
+    currentIndex: 0,
+    imageList: [
+      'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/44/thumbnail-1703933453.png',
+      'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/44/1703953105.jpg',
+      'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/41/thumbnail-1703933407.jpg',
+    ],
   },
 
-  /**
-   * Lifecycle function--Called when page load
-   */
-  onLoad(options) {
-
+  swiperChange: function (event) {
+    this.setData({
+      currentIndex: event.detail.current,
+    });
   },
-
-  /**
-   * Lifecycle function--Called when page is initially rendered
-   */
-  onReady() {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page show
-   */
-  onShow() {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page hide
-   */
-  onHide() {
-
-  },
-
-  /**
-   * Lifecycle function--Called when page unload
-   */
-  onUnload() {
-
-  },
-
-  /**
-   * Page event handler function--Called when user drop down
-   */
-  onPullDownRefresh() {
-
-  },
-
-  /**
-   * Called when page reach bottom
-   */
-  onReachBottom() {
-
-  },
-
-  /**
-   * Called when user click on the top right corner to share
-   */
-  onShareAppMessage() {
-
-  }
-})
+});

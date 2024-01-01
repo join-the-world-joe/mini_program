@@ -13,7 +13,10 @@ Component({
   },
   methods:{
     tapItem: function(event) {
-      console.log(event.currentTarget.dataset.id)
+      console.log("vwrap.tapItem, id:", event.currentTarget.dataset.id)
+      wx.navigateTo({
+        url: '/screen/carousel/carousel',
+      })
     }
   }
 })

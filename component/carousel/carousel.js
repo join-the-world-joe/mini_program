@@ -1,3 +1,5 @@
+const { Runtime } = require("../../runtime/runtime")
+
 Component({
   properties: {
     dataMap: {
@@ -9,7 +11,11 @@ Component({
   },
   methods:{
     tapItem: function(event) {
-      console.log(event.currentTarget.dataset.id)
+      console.log("carousel.tapItem, id: ", event.currentTarget.dataset.id, "dataMap: ", this.data.dataMap)
+      Runtime.SetAdvertisement(this.data.dataMap[event.currentTarget.dataset.id])
+      wx.navigateTo({
+        url: "/screen/carousel/carousel",
+      })
     }
   }
 })

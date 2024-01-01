@@ -2,6 +2,7 @@ const { Config } = require("../config/config")
 const { PacketClient } = require("../framework/packet_client")
 const { RateLimiter } = require('../framework/rate_limiter')
 const { Websocket } = require("../framework/websocket")
+const { Advertisement } = require("../model/advertisement")
 const { AES } = require("../plugin/crypto/aes")
 const { Convert } = require("../utils/convert")
 const { Log } = require("../utils/log")
@@ -19,6 +20,9 @@ class Runtime {
   static period = 1000
   static _periodic = undefined
   static periodicInitialisationRequested = false
+
+  // for cache purposes
+  static advertisement = new Advertisement()
 
   static Setup() {
     try{
@@ -183,6 +187,12 @@ class Runtime {
   }
   static GetPeriodic() {
     return Runtime._periodic
+  }
+  static SetAdvertisement(temp) {
+    Runtime.advertisement = temp
+  }
+  static GetAdvertisement() {
+    return Runtime.advertisement
   }
 }
 
