@@ -22,5 +22,7 @@ module.exports = {
   TitleOfDeals: 'title of deals',
   TitleOfBarbecue: 'title of barbecue',
   TitleOfSnacks: 'title of snacks',
-  TitleOfCamping: 'title of comping'
+  TitleOfCamping: 'title of comping',
+
+  AttempToLogin: 'attemp to login',
 }

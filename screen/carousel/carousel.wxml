@@ -1,2 +1,10 @@
 <view class="container">
+  <swiper class="swiper_container" indicator-dots  indicator-active-color='black' indicator-color='white' autoplay interval='2000' circular>
+    <view wx:for="{{advertisement.image}}" wx:key="*this">
+      <swiper-item>
+        <image class="image" src="{{item}}" />
+      </swiper-item>    
+    </view>
+  </swiper>
+  <view class="add-to-cart-button" bindtap="addToCart">加入购物车</view>
 </view>

@@ -1,4 +1,4 @@
-const {TitleOfDeals,TryLater, TitleOfNotification, TitleOfSendSMSButton, TitleOfRegisterButton,TipOfPlaceholderOfInputOfVerificationCode, TipOfPlaceholderOfInputOfPhoneNumber, TitleOfVerificationCode, TitleOfLoginButton, TitleOfPhoneNumber, TitleOfVerificationCodeLoginScreen, TitleOfGuess, TitleOfPlease, TitleOfClick,IllegalPhoneNumber,IllegalVerificationCode,PhoneNumberNotRegisteredYet,TitleOfPhoneNumberRegisterScreen,NotificationOfRegisterSuccessfully, PhoneNumberAlreadyRegistered,TitleOfLoading,TitleOfBarbecue,TitleOfSnacks,TitleOfCamping } = require("./language")
+const {TitleOfDeals,TryLater, TitleOfNotification, TitleOfSendSMSButton, TitleOfRegisterButton,TipOfPlaceholderOfInputOfVerificationCode, TipOfPlaceholderOfInputOfPhoneNumber, TitleOfVerificationCode, TitleOfLoginButton, TitleOfPhoneNumber, TitleOfVerificationCodeLoginScreen, TitleOfGuess, TitleOfPlease, TitleOfClick,IllegalPhoneNumber,IllegalVerificationCode,PhoneNumberNotRegisteredYet,TitleOfPhoneNumberRegisterScreen,NotificationOfRegisterSuccessfully, PhoneNumberAlreadyRegistered,TitleOfLoading,TitleOfBarbecue,TitleOfSnacks,TitleOfCamping, AttempToLogin } = require("./language")
 
 class Chinese {
   static Name = 'Chinese'
@@ -30,6 +30,8 @@ class Chinese {
     Chinese.Language[TitleOfBarbecue] = '烧烤必备'
     Chinese.Language[TitleOfSnacks] = '畅销零食'
     Chinese.Language[TitleOfCamping] = '露营专享'
+
+    Chinese.Language[AttempToLogin] = '正在登入系统'
   }
 
   static Translate(input) {

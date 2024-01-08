@@ -1,4 +1,4 @@
-const { Code } = require("../../code/code")
+const { Code } = require("../../../code/code")
 
 class SendVerificationCodeReq {
   constructor() {

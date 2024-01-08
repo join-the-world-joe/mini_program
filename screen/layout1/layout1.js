@@ -2,20 +2,38 @@
 
 Page({
   data: {
-    indicatorDots: true,
-    autoplay: true,
-    interval: 3000,
-    duration: 500,
-    imageUrls: [
-      'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/40/thumbnail-1703952543.jpg',
-      'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/41/thumbnail-1703933407.jpg',
-      'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/43/thumbnail-1703933436.jpg',
+    categories: [
+      { id: 1, name: '水果' },
+      { id: 2, name: '蔬菜' },
+      // 添加更多分类项
     ],
+    products: [
+      { id: 1, categoryId: 1, name: '苹果', price: 5.99, image: 'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/6077aef1-3064-4d80-935b-bf2827e18cc0/0-1704602315.png' },
+      { id: 2, categoryId: 1, name: '香蕉', price: 3.99, image: 'https://advertisement-image.oss-cn-shenzhen.aliyuncs.com/6077aef1-3064-4d80-935b-bf2827e18cc0/2-1704602384.jpg' },
+      // 添加更多商品项
+    ],
+    selectedCategoryId: 1, // 默认选中的分类ID
   },
-  addToCart(event) {
-    const { currentTarget: { dataset: { index } } } = event;
-    const selectedGoods = this.data.goodsList[index];
-    // 在这里可以实现加入购物车的逻辑，例如向购物车数组中添加商品对象
-    console.log(`商品 ${selectedGoods.id} 已加入购物车`);
+
+  onLoad: function () {
+    this.setData({
+      selectedProducts: this.getProductsByCategoryId(this.data.selectedCategoryId),
+    });
+    wx.showLoading({
+      title: 'title',
+      mask: true,
+    })
+  },
+
+  selectCategory: function (e) {
+    const categoryId = e.currentTarget.dataset.categoryId;
+    this.setData({
+      selectedCategoryId: categoryId,
+      selectedProducts: this.getProductsByCategoryId(categoryId),
+    });
+  },
+
+  getProductsByCategoryId: function (categoryId) {
+    return this.data.products.filter(product => product.categoryId === categoryId);
   },
 });

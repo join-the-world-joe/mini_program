@@ -7,14 +7,19 @@ Page({
    * Page initial data
    */
   data: {
-
+    advertisement: undefined,
   },
-
+  addToCart() {
+    console.log('addToCart')
+  },
   /**
    * Lifecycle function--Called when page load
    */
   onLoad(options) {
     console.log("advertisement: ", Runtime.GetAdvertisement())
+    this.setData({
+      advertisement: Runtime.GetAdvertisement()
+    })
   },
 
   /**

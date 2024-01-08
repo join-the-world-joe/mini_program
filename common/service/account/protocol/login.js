@@ -1,4 +1,4 @@
-const { Code } = require("../../code/code")
+const { Code } = require("../../../code/code")
 
 class LoginReq {
   constructor() {
@@ -28,7 +28,6 @@ class LoginReq {
     this.user_id = userId
   }
 }
-
 
 class LoginRsp {
   constructor() {

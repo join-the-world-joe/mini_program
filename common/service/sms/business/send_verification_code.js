@@ -1,9 +1,9 @@
-const { Header } = require("../../../framework/header")
-const { PacketClient } = require("../../../framework/packet_client")
-const { SendVerificationCodeReq } = require("../../protocol/sms/send_verification_code")
-const {Major} = require('../../route/major')
-const {SMS} = require('../../route/sms')
-const {Runtime} = require('../../../runtime/runtime')
+const { Header } = require("../../../../framework/header")
+const { PacketClient } = require("../../../../framework/packet_client")
+const { SendVerificationCodeReq } = require("../protocol/send_verification_code")
+const {Major} = require('../../../route/major')
+const {SMS} = require('../../../route/sms')
+const {Runtime} = require('../../../../runtime/runtime')
 
 function SendVerificationCodeOfRegister({from, caller, countryCode, phoneNumber}) {
   var hdr = new Header()

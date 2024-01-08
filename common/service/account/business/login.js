@@ -1,9 +1,9 @@
-const { Header } = require("../../../framework/header")
-const { PacketClient } = require("../../../framework/packet_client")
-const {Account} = require('../../route/account')
-const {Major} = require('../../route/major')
-const {Runtime} = require('../../../runtime/runtime')
-const { LoginReq } = require("../../protocol/account/login")
+const { Header } = require("../../../../framework/header")
+const { PacketClient } = require("../../../../framework/packet_client")
+const {Account} = require('../../../route/account')
+const {Major} = require('../../../route/major')
+const {Runtime} = require('../../../../runtime/runtime')
+const { LoginReq } = require("../protocol/login")
 
 function Login({from, caller, countryCode, phoneNumber, verificationCode}) {
   var hdr = new Header()

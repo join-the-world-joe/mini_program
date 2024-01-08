@@ -1,7 +1,7 @@
 const { Code } = require('../common/code/code');
 const { Config } = require('../config/config')
 const { FetchRecordsOfADOfDealsRsp } = require('../common/protocol/advertisement/fetch_records_of_ad_of_deals');
-const { FetchRecordsOfADOfDeals } = require('../common/business/advertisement/fetch_records_of_ad_of_deals');
+const { FetchRecordsOfADOfDeals } = require('../common/service/advertisement/business/fetch_records_of_ad_of_deals');
 
 class FetchRecordsOfADOfDealsProgress {
   constructor(from) {

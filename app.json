@@ -1,9 +1,9 @@
 {
   "pages": [
     "screen/login/login",
-    "screen/carousel/carousel",
     "screen/layout/layout",
     "screen/layout1/layout1",
+    "screen/carousel/carousel",
     "screen/home/home",
     "layout/masonry/masonry",
     "screen/cart/cart",

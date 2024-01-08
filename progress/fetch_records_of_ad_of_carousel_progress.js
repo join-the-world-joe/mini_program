@@ -1,7 +1,7 @@
 const { Code } = require('../common/code/code');
 const { Config } = require('../config/config')
 const { FetchRecordsOfADOfCarouselRsp } = require('../common/protocol/advertisement/fetch_records_of_ad_of_carousel');
-const { FetchRecordsOfADOfCarousel } = require('../common/business/advertisement/fetch_records_of_ad_of_carousel');
+const { FetchRecordsOfADOfCarousel } = require('../common/service/advertisement/business/fetch_records_of_ad_of_carousel');
 
 class FetchRecordsOfADOfCarouselProgress {
   constructor(from) {

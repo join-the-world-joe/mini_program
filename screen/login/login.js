@@ -4,13 +4,15 @@ const { SMS } = require("../../common/route/sms")
 const { Translator } = require("../../common/translator/translator")
 const { Config } = require("../../config/config")
 const { Log } = require("../../utils/log")
-const {SendVerificationCodeRsp} = require('../../common/protocol/sms/send_verification_code')
-const { SendVerificationCodeOfLogin } = require("../../common/business/sms/send_verification_code")
+const {SendVerificationCodeRsp} = require('../../common/service/sms/protocol/send_verification_code')
+const { SendVerificationCodeOfLogin } = require("../../common/service/sms/business/send_verification_code")
 const { Runtime } = require("../../runtime/runtime")
 const { Account } = require("../../common/route/account")
 const { Code } = require("../../common/code/code")
-const {Login} = require('../../common/business/account/login')
-const { LoginRsp } = require("../../common/protocol/account/login")
+const {Login} = require('../../common/service/account/business/login')
+const { LoginRsp } = require("../../common/service/account/protocol/login")
+const { LoginStep } = require("../../common/service/account/progress/login/login_step")
+const { LoginProgress } = require("../../common/service/account/progress/login/login_progress")
 
 Page({
   data: {
@@ -34,6 +36,8 @@ Page({
     lengthOfVerificationCode: 0,
     lengthOfPhoneNumber: 0,
     smsButtonLabel:'',
+
+    loginProgress: undefined,
   },
   navigate_to_register() {
     wx.navigateTo({
@@ -81,64 +85,64 @@ Page({
   },
   loginHandler(packet) {
     var caller = 'loginHandler'
-    var response = (new LoginRsp).FromJson(packet.GetBody())
+    var rsp = (new LoginRsp).FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
       from: this.data.from,
       caller: caller,
-      message: 'code: ' + response.GetCode(),
+      message: 'code: ' + rsp.GetCode(),
    })
-   if ( response.GetCode() == Code.OK) {
-    // success
-    wx.switchTab({
-      url: '/screen/home/home',
-    })
-  } else {
-    // error occurs
-    if (response.GetCode() == Code.InvalidData ) {
-      // verification code is invalid
-      wx.showModal({
-        title: Translator.Translate(TitleOfNotification),
-        content: Translator.Translate(IllegalVerificationCode),
-        showCancel: false,
-        success (res) {
-          if (res.confirm) {
-            console.log('press confirm')
-          }
-        }
-      })
-      return
-    } else if( response.GetCode() == Code.EntryNotFound ) {
-      // user record not found
-      wx.showModal({
-        title: Translator.Translate(TitleOfNotification),
-        content: Translator.Translate(phoneNumberNotRegisteredYet),
-        showCancel: false,
-        success (res) {
-          if (res.confirm) {
-            console.log('press confirm')
-          }
-        }
-      })
-      return
-    } else if( response.GetCode() == Code.InvalidDataType ) {
-      // illegal phone number
-      wx.showModal({
-        title: Translator.Translate(TitleOfNotification),
-        content: Translator.Translate(IllegalPhoneNumber),
-        showCancel: false,
-        success (res) {
-          if (res.confirm) {
-            console.log('press confirm')
-          }
-        }
-      })
-      return
-    } else  {
-      // error code
-    }
-  }
+   if (this.data.loginProgress != undefined) {
+    this.data.loginProgress.Respond(rsp)
+   }
+  //  if ( response.GetCode() == Code.OK) {
+  //   // success
+  // } else {
+  //   // error occurs
+  //   if (response.GetCode() == Code.InvalidData ) {
+  //     // verification code is invalid
+  //     wx.showModal({
+  //       title: Translator.Translate(TitleOfNotification),
+  //       content: Translator.Translate(IllegalVerificationCode),
+  //       showCancel: false,
+  //       success (res) {
+  //         if (res.confirm) {
+  //           console.log('press confirm')
+  //         }
+  //       }
+  //     })
+  //     return
+  //   } else if( response.GetCode() == Code.EntryNotFound ) {
+  //     // user record not found
+  //     wx.showModal({
+  //       title: Translator.Translate(TitleOfNotification),
+  //       content: Translator.Translate(phoneNumberNotRegisteredYet),
+  //       showCancel: false,
+  //       success (res) {
+  //         if (res.confirm) {
+  //           console.log('press confirm')
+  //         }
+  //       }
+  //     })
+  //     return
+  //   } else if( response.GetCode() == Code.InvalidDataType ) {
+  //     // illegal phone number
+  //     wx.showModal({
+  //       title: Translator.Translate(TitleOfNotification),
+  //       content: Translator.Translate(IllegalPhoneNumber),
+  //       showCancel: false,
+  //       success (res) {
+  //         if (res.confirm) {
+  //           console.log('press confirm')
+  //         }
+  //       }
+  //     })
+  //     return
+  //   } else  {
+  //     // error code
+  //   }
+  // }
   },
   smsHandler(packet) {
     var caller = 'smsHandler'
@@ -177,13 +181,68 @@ Page({
     }
   },
   request_to_login() {
-    try{
-      var caller = 'request_to_login'
-      var major = Major.Account
-      var minor = Account.LoginReq
-      Login({from:this.data.from, caller:caller, countryCode:'86', phoneNumber:this.data.phoneNumber, verificationCode:this.data.verificationCode})
-    } catch(e) {
-     Log.Debug({major:major, minor:minor, from:this.data.from, caller:caller, message:'failure, err: ' + e})
+    if (this.data.loginProgress == undefined) {
+      var step = new LoginStep()
+      step.SetCountryCode('86')
+      step.SetPhoneNumber(this.data.phoneNumber)
+      step.SetVerificationCode(this.data.verificationCode)
+      this.setData({
+        loginProgress: new LoginProgress({
+          step: step,
+          onSuccess: () => {
+            this.data.loginProgress = undefined
+            // wx.switchTab({
+            //   url: '/screen/home/home',
+            // })
+          }, 
+          onFailure: () => {
+            this.data.loginProgress = undefined
+            if (step.GetCode() == Code.InvalidData ) {
+              // verification code is invalid
+              wx.showModal({
+                title: Translator.Translate(TitleOfNotification),
+                content: Translator.Translate(IllegalVerificationCode),
+                showCancel: false,
+                success (res) {
+                  if (res.confirm) {
+                    console.log('press confirm')
+                  }
+                }
+              })
+              return
+            } else if( step.GetCode() == Code.EntryNotFound ) {
+              // user record not found
+              wx.showModal({
+                title: Translator.Translate(TitleOfNotification),
+                content: Translator.Translate(phoneNumberNotRegisteredYet),
+                showCancel: false,
+                success (res) {
+                  if (res.confirm) {
+                    console.log('press confirm')
+                  }
+                }
+              })
+              return
+            } else if( step.GetCode() == Code.InvalidDataType ) {
+              // illegal phone number
+              wx.showModal({
+              title: Translator.Translate(TitleOfNotification),
+              content: Translator.Translate(IllegalPhoneNumber),
+              showCancel: false,
+              success (res) {
+                  if (res.confirm) {
+                    console.log('press confirm')
+                  }
+                }
+              })
+              return
+            } else  {
+              // error code
+            }
+          },
+        })
+      })
+      this.data.loginProgress.Show()
     }
   },
   on_phone_number_change(e) {

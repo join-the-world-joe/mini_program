@@ -216,6 +216,7 @@ Page({
     if (!this.data.showLoading) {
       wx.showLoading({
         title: Translator.Translate(TitleOfLoading),
+        mask: true,
       })
       this.setData({
         showLoading: true,

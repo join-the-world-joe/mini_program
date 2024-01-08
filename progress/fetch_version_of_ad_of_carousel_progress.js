@@ -1,7 +1,7 @@
 const { Code } = require('../common/code/code');
 const { FetchVersionOfADOfCarouselRsp } = require('../common/protocol/advertisement/fetch_version_of_ad_of_carousel');
 const { Config } = require('../config/config')
-const { FetchVersionOfADOfCarousel } = require('../common/business/advertisement/fetch_version_of_ad_of_carousel')
+const { FetchVersionOfADOfCarousel } = require('../common/service/advertisement/business/fetch_version_of_ad_of_carousel')
 class FetchVersionOfADOfCarouselProgress {
   constructor(from) {
     this._from = from
