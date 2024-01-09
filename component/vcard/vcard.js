@@ -1,6 +1,19 @@
 const { Advertisement } = require("../../model/advertisement")
 
 Component({
+  lifetimes: {
+    attached: function() {
+      console.log('attached')
+      // 在组件实例进入页面节点树时执行
+    },
+    created: function() {
+      console.log('ready: ', this.data.imageUrl)
+      this.setData({
+        imageUrl: this.properties.advertisement.oss_path + this.properties.advertisement.GetObjectFileName()
+      })
+      console.log('url: ', this.data.imageUrl)
+    }
+  },
   properties: {
     advertisement: {
       type: Advertisement,
@@ -10,6 +23,7 @@ Component({
   data: {
     imageWidth: 0,
     imageHeight: 0,
+    imageUrl: '',
   },
   methods:{
     loadImage: function(e) {

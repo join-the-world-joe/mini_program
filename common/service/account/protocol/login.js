@@ -48,21 +48,28 @@ class LoginRsp {
   GetSecret() {
     return this._secret
   }
-  FromJson(json) { // modify itself
+  static FromJson(json) { // modify itself
+    var that = new LoginRsp()
     try {
       // console.log('Login.Response.FromJson.json: ', json)
       if (json != undefined) {
         if (json.code != undefined) {
-          this._code = json.code
-          this._user_id = json.user_id
-          this._member_id = json.member_id
-          this._secret = json.secret
+           that._code = json.code           
+        }
+        if (json.user_id != undefined) {
+           that._user_id = json.user_id
+        }
+        if (json.member_id != undefined) {
+           that._member_id = json.member_id
+        }
+        if (json.secret != undefined) {
+           that._secret = json.secret
         }
       }
     } catch(e) {
       console.log('PacketClient.FromJson failure, err: ', e)
     } finally {
-      return this
+      return that
     }
   }
 }

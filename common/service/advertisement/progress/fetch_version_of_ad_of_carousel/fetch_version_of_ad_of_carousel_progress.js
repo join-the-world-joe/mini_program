@@ -1,12 +1,10 @@
-const { LoginRsp } = require('../../protocol/login')
-var {LoginStep} = require('./login_step')
 var {AttempToLogin} = require('../../../../../common/language/language')
 var {Translator} = require('../../../../../common/translator/translator')
 const { Runtime } = require('../../../../../runtime/runtime')
 const { Config } = require('../../../../../config/config')
 const { Code } = require('../../../../code/code')
 
-class LoginProgress {
+class FetchVersionOfADOfCarouselProgress {
   constructor({step, onSuccess, onFailure}) {
     this._message = Translator.Translate(AttempToLogin)
     this._step = step
@@ -16,9 +14,7 @@ class LoginProgress {
     this._initialized = false
   }
   Respond(rsp) {
-    if (rsp != undefined) {
-      this._step.Respond(rsp)
-    }
+    this._step.Respond(rsp)
   }
   Progress() {
     return this._step.Progress()
@@ -51,9 +47,10 @@ class LoginProgress {
       this.setup()
       this._initialized = true
     }
+    return this._step.GetCode()
   }
 }
 
 module.exports = {
-  LoginProgress
+  FetchVersionOfADOfCarouselProgress
 }

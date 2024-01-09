@@ -21,13 +21,14 @@ class SendVerificationCodeRsp {
   GetCode() {
     return this._code
   }
-  FromJson(json) { 
+  static FromJson(json) { 
+    var that = new SendVerificationCodeRsp()
     if (json != undefined) {
       if (json.code != undefined) {
-        this._code = json.code
+        that._code = json.code
       }
     }
-    return this
+    return that
   }
 }
 

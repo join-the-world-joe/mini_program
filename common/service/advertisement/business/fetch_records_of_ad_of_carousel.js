@@ -3,7 +3,7 @@ const { PacketClient } = require("../../../../framework/packet_client")
 const {Major} = require('../../../route/major')
 const {Runtime} = require('../../../../runtime/runtime')
 const { Advertisement } = require("../../../route/advertisement")
-const { FetchRecordsOfADOfCarouselReq } = require("../../protocol/advertisement/fetch_records_of_ad_of_carousel")
+const { FetchRecordsOfADOfCarouselReq } = require('../protocol/fetch_records_of_ad_of_carousel')
 
 function FetchRecordsOfADOfCarousel({from, caller, advertisementIdList}) {
   var hdr = new Header()

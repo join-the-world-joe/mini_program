@@ -2,8 +2,9 @@
   <swiper class="swiper_container" indicator-dots  indicator-active-color='black' indicator-color='white' autoplay interval='2000' circular>
     <view wx:for="{{dataMap}}" wx:key="advertisementId">
       <swiper-item data-id="{{item.advertisement_id}}"  bind:tap="tapItem">
-        <image class="image" src="{{item.image[0]}}" />
+        <image class="image" src="{{UrlListOfCoverImage[item.advertisement_id]}}" />
       </swiper-item>    
     </view>
   </swiper>
+  
 </view>

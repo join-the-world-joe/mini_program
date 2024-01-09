@@ -1,4 +1,4 @@
-const { Code } = require("../../code/code")
+const { Code } = require("../../../code/code")
 
 class FetchRecordsOfADOfCarouselReq {
   constructor() {
@@ -20,18 +20,19 @@ class FetchRecordsOfADOfCarouselRsp {
   GetRecordsOfADOfCarousel() {
     return this.records_of_ad_of_carousel
   }
-  FromJson(json) { 
+  static FromJson(json) { 
+    var that = new FetchRecordsOfADOfCarouselRsp()
     if (json != undefined) {
       if (json.code != undefined) {
-        this.code = json.code
+        that.code = json.code
+      }
+      if (json.body != undefined) {
+        if (json.body.records_of_ad_of_carousel != undefined) {
+          that.records_of_ad_of_carousel = json.body.records_of_ad_of_carousel
+        }
       }
     }
-    if (json.body != undefined) {
-      if (json.body.records_of_ad_of_carousel != undefined) {
-        this.records_of_ad_of_carousel = json.body.records_of_ad_of_carousel
-      }
-    }
-    return this
+    return that
   }
 }
 

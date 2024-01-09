@@ -85,7 +85,7 @@ Page({
   },
   loginHandler(packet) {
     var caller = 'loginHandler'
-    var rsp = (new LoginRsp).FromJson(packet.GetBody())
+    var rsp = LoginRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
@@ -94,59 +94,12 @@ Page({
       message: 'code: ' + rsp.GetCode(),
    })
    if (this.data.loginProgress != undefined) {
-    this.data.loginProgress.Respond(rsp)
+     this.data.loginProgress.Respond(rsp)
    }
-  //  if ( response.GetCode() == Code.OK) {
-  //   // success
-  // } else {
-  //   // error occurs
-  //   if (response.GetCode() == Code.InvalidData ) {
-  //     // verification code is invalid
-  //     wx.showModal({
-  //       title: Translator.Translate(TitleOfNotification),
-  //       content: Translator.Translate(IllegalVerificationCode),
-  //       showCancel: false,
-  //       success (res) {
-  //         if (res.confirm) {
-  //           console.log('press confirm')
-  //         }
-  //       }
-  //     })
-  //     return
-  //   } else if( response.GetCode() == Code.EntryNotFound ) {
-  //     // user record not found
-  //     wx.showModal({
-  //       title: Translator.Translate(TitleOfNotification),
-  //       content: Translator.Translate(phoneNumberNotRegisteredYet),
-  //       showCancel: false,
-  //       success (res) {
-  //         if (res.confirm) {
-  //           console.log('press confirm')
-  //         }
-  //       }
-  //     })
-  //     return
-  //   } else if( response.GetCode() == Code.InvalidDataType ) {
-  //     // illegal phone number
-  //     wx.showModal({
-  //       title: Translator.Translate(TitleOfNotification),
-  //       content: Translator.Translate(IllegalPhoneNumber),
-  //       showCancel: false,
-  //       success (res) {
-  //         if (res.confirm) {
-  //           console.log('press confirm')
-  //         }
-  //       }
-  //     })
-  //     return
-  //   } else  {
-  //     // error code
-  //   }
-  // }
   },
   smsHandler(packet) {
     var caller = 'smsHandler'
-    var response = (new SendVerificationCodeRsp()).FromJson(packet.GetBody())
+    var response = SendVerificationCodeRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
@@ -191,9 +144,9 @@ Page({
           step: step,
           onSuccess: () => {
             this.data.loginProgress = undefined
-            // wx.switchTab({
-            //   url: '/screen/home/home',
-            // })
+            wx.switchTab({
+              url: '/screen/home/home',
+            })
           }, 
           onFailure: () => {
             this.data.loginProgress = undefined

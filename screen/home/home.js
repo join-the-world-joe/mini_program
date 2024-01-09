@@ -4,24 +4,20 @@ const { Major } = require("../../common/route/major")
 const { Advertisement } = require('../../common/route/advertisement')
 const { Runtime } = require("../../runtime/runtime")
 const { Log } = require("../../utils/log")
-const { FetchIdListOfADOfCarouselRsp } = require('../../common/protocol/advertisement/fetch_id_list_of_ad_of_carousel')
-const { FetchVersionOfADOfCarouselRsp } = require('../../common/protocol/advertisement/fetch_version_of_ad_of_carousel')
 const { Code } = require('../../common/code/code')
 const { Translator } = require('../../common/translator/translator')
 const { TitleOfLoading, TitleOfDeals, TitleOfCamping, TitleOfBarbecue, TitleOfSnacks } = require('../../common/language/language')
-const { FetchRecordsOfADOfCarouselRsp } = require('../../common/protocol/advertisement/fetch_records_of_ad_of_carousel')
 var modelOfAdvertisement = require('../../model/advertisement')
-const { FetchVersionOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_version_of_ad_of_deals')
-const { FetchIdListOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_id_list_of_ad_of_deals')
-const { FetchRecordsOfADOfDealsRsp } = require('../../common/protocol/advertisement/fetch_records_of_ad_of_deals')
-const {FetchVersionOfADOfCarouselProgress} = require('../../progress/fetch_version_of_ad_of_carousel_progress')
-const { FetchIdListOfADOfCarouselProgress } = require('../../progress/fetch_id_list_of_ad_of_carousel_progress')
-const { FetchRecordsOfADOfCarouselProgress } = require('../../progress/fetch_records_of_ad_of_carousel_progress')
-const { FetchVersionOfADOfDealsProgress } = require('../../progress/fetch_version_of_ad_of_deals_progress')
-const { FetchIdListOfADOfDealsProgress } = require('../../progress/fetch_id_list_of_ad_of_deals_progress')
-const { FetchRecordsOfADOfDealsProgress } = require('../../progress/fetch_records_of_ad_of_deals_progress')
 const {Menu} = require('../../common/macro/menu')
-
+const { FetchVersionOfADOfCarouselStep } = require('../../common/service/advertisement/progress/fetch_version_of_ad_of_carousel/fetch_version_of_ad_of_carousel_step')
+const { FetchVersionOfADOfCarouselProgress } = require('../../common/service/advertisement/progress/fetch_version_of_ad_of_carousel/fetch_version_of_ad_of_carousel_progress')
+const { FetchVersionOfADOfCarouselRsp } = require('../../common/service/advertisement/protocol/fetch_version_of_ad_of_carousel')
+const { FetchIdListOfADOfCarouselProgress } = require('../../common/service/advertisement/progress/fetch_id_list_of_ad_of_carousel/fetch_id_list_of_ad_of_carousel_progress')
+const { FetchIdListOfADOfCarouselStep} = require('../../common/service/advertisement/progress/fetch_id_list_of_ad_of_carousel/fetch_id_list_of_ad_of_carousel_step')
+const { FetchIdListOfADOfCarouselRsp } = require('../../common/service/advertisement/protocol/fetch_id_list_of_ad_of_carousel')
+const { FetchRecordsOfADOfCarouselStep } = require('../../common/service/advertisement/progress/fetch_records_of_ad_of_carousel/fetch_records_of_ad_of_carousel_step')
+const { FetchRecordsOfADOfCarouselProgress } = require('../../common/service/advertisement/progress/fetch_records_of_ad_of_carousel/fetch_records_of_ad_of_carousel_progress')
+const { FetchRecordsOfADOfCarouselRsp } = require('../../common/service/advertisement/protocol/fetch_records_of_ad_of_carousel')
 Page({
 
   /**
@@ -86,34 +82,87 @@ Page({
       wx.stopPullDownRefresh();
     }, 1000);
   },
+  // reloadScreen() {
+  //   this.setData({
+  //     active: false,
+  //     showLoading: false,
+  //     loadCompleted: false,
+  //     hideMenu: true,
+  //     hideCarousel: true,
+  //     hideContent: true,
+  //     loadCarouselCompleted: false,
+  //     loadDealsCompleted: false,
+  //     loadCompingCompleted: false,
+  //     loadBarbecueCompleted: false,
+  //     loadSnacksCompleted: false,
+  //     recordsOfADOfCarousel: new Object(),
+  //     recordsOfADOfDeals: new Object(),
+  //     hasFigureOutArgumentOfFetchRecordsOfADOfCarousel: false,
+  //     hasFigureOutArgumentOfFetchRecordsOfADOfDeals: false,
+  //   })
+  //   this.setData({
+  //     progressOfFetchVersionOfADOfCarousel: new FetchVersionOfADOfCarouselProgress(this.data.from),
+  //     progressOfFetchIdListOfADOfCarousel: new FetchIdListOfADOfCarouselProgress(this.data.from),
+  //     progressOfFetchRecordsOfADOfCarousel: new FetchRecordsOfADOfCarouselProgress(this.data.from),
+  //     progressOfFetchVersionOfADOfDeals: new FetchVersionOfADOfDealsProgress(this.data.from),
+  //     progressOfFetchIdListOfADOfDeals: new FetchIdListOfADOfDealsProgress(this.data.from),
+  //     progressOfFetchRecordsOfADOfDeals: new FetchRecordsOfADOfDealsProgress(this.data.from),
+  //   })
+  //   Runtime.SetPeriod(Config.PeriodOfScreenInitialisation)
+  //   Runtime.SetObserve(this.observe)
+  //   Runtime.SetPeriodc(this.progress)
+  // },
+  progress() {
+    if (this.data.loadCompleted) {
+      return
+    }
+    if (!this.data.showLoading) {
+      wx.showLoading({
+        title: Translator.Translate(TitleOfLoading),
+        mask: true,
+      })
+      this.setData({
+        showLoading: true,
+      })
+    }
+
+    if (!this.data.loadCarouselCompleted) {
+      var ret = this.reloadCarouselProgress()
+      if (ret < 0 || ret > 0) {
+        if (ret < 0) {
+          this.complete()
+        }
+        return
+      }
+    }
+
+    this.setData({
+      hideMenu: false,
+      hideCarousel: false,
+      hideContent: false,
+    })
+
+    this.complete()
+  },
   reloadScreen() {
+    var fetchVersionOfADOfCarouselStep = new FetchVersionOfADOfCarouselStep()
+    var fetchVersionOfADOfCarouselProgress = new FetchVersionOfADOfCarouselProgress({
+      step: fetchVersionOfADOfCarouselStep, 
+      onSuccess: undefined, 
+      onFailure: undefined,
+    })
+    var fetchIdListOfADOfCarouselStep = new FetchIdListOfADOfCarouselStep()
+    var fetchIdListOfADOfCarouselProgress = new FetchIdListOfADOfCarouselProgress({
+      step: fetchIdListOfADOfCarouselStep, 
+      onSuccess: undefined, 
+      onFailure: undefined,
+    })
     this.setData({
       active: false,
-      showLoading: false,
-      loadCompleted: false,
-      hideMenu: true,
-      hideCarousel: true,
-      hideContent: true,
-      loadCarouselCompleted: false,
-      loadDealsCompleted: false,
-      loadCompingCompleted: false,
-      loadBarbecueCompleted: false,
-      loadSnacksCompleted: false,
-      recordsOfADOfCarousel: new Object(),
-      recordsOfADOfDeals: new Object(),
-      hasFigureOutArgumentOfFetchRecordsOfADOfCarousel: false,
-      hasFigureOutArgumentOfFetchRecordsOfADOfDeals: false,
-    })
-    this.setData({
-      progressOfFetchVersionOfADOfCarousel: new FetchVersionOfADOfCarouselProgress(this.data.from),
-      progressOfFetchIdListOfADOfCarousel: new FetchIdListOfADOfCarouselProgress(this.data.from),
-      progressOfFetchRecordsOfADOfCarousel: new FetchRecordsOfADOfCarouselProgress(this.data.from),
-      progressOfFetchVersionOfADOfDeals: new FetchVersionOfADOfDealsProgress(this.data.from),
-      progressOfFetchIdListOfADOfDeals: new FetchIdListOfADOfDealsProgress(this.data.from),
-      progressOfFetchRecordsOfADOfDeals: new FetchRecordsOfADOfDealsProgress(this.data.from),
+      progressOfFetchVersionOfADOfCarousel: fetchVersionOfADOfCarouselProgress,
+      progressOfFetchIdListOfADOfCarousel: fetchIdListOfADOfCarouselProgress,
     })
     Runtime.SetPeriod(Config.PeriodOfScreenInitialisation)
-    Runtime.SetObserve(this.observe)
     Runtime.SetPeriodc(this.progress)
   },
   onTest() {
@@ -172,7 +221,16 @@ Page({
     }
 
     if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfCarousel) {
-      this.data.progressOfFetchRecordsOfADOfCarousel.SetAdvertisementIdList(this.data.idListOfADOfCarousel)
+      var step = new FetchRecordsOfADOfCarouselStep()
+      step.SetAdvertisementIdList(this.data.idListOfADOfCarousel)
+      var fetchRecordsOfADOfCarouselProgress = new FetchRecordsOfADOfCarouselProgress({
+        step: step,
+        onSuccess: undefined,
+        onFailure: undefined,
+      })
+      this.setData({
+        progressOfFetchRecordsOfADOfCarousel: fetchRecordsOfADOfCarouselProgress,
+      })
       this.data.hasFigureOutArgumentOfFetchRecordsOfADOfCarousel = true
     }
 
@@ -208,57 +266,57 @@ Page({
       loadDealsCompleted: true
     })
   },
-  progress() {
-    if (this.data.loadCompleted) {
-      return
-    }
+  // progress() {
+  //   if (this.data.loadCompleted) {
+  //     return
+  //   }
 
-    if (!this.data.showLoading) {
-      wx.showLoading({
-        title: Translator.Translate(TitleOfLoading),
-        mask: true,
-      })
-      this.setData({
-        showLoading: true,
-      })
-    }
+  //   if (!this.data.showLoading) {
+  //     wx.showLoading({
+  //       title: Translator.Translate(TitleOfLoading),
+  //       mask: true,
+  //     })
+  //     this.setData({
+  //       showLoading: true,
+  //     })
+  //   }
 
-    if (!this.data.loadCarouselCompleted) {
-      var ret = this.reloadCarouselProgress() 
-      if (ret < 0 || ret > 0) {
-        if (ret < 0) {
-          this.complete()
-        }
-        return
-      }
-    }
+  //   if (!this.data.loadCarouselCompleted) {
+  //     var ret = this.reloadCarouselProgress() 
+  //     if (ret < 0 || ret > 0) {
+  //       if (ret < 0) {
+  //         this.complete()
+  //       }
+  //       return
+  //     }
+  //   }
     
-    if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
-      if (!this.data.loadDealsCompleted) {
-        ret = this.reloadDealsProgress()
-        if (ret < 0 || ret > 0) {
-          if (ret < 0) {
-            this.complete()
-          }
-          return
-        }
-      }
-    } else if (this.data.indexOfSubMenu == Menu.Comping) { // Comping
+  //   if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
+  //     if (!this.data.loadDealsCompleted) {
+  //       ret = this.reloadDealsProgress()
+  //       if (ret < 0 || ret > 0) {
+  //         if (ret < 0) {
+  //           this.complete()
+  //         }
+  //         return
+  //       }
+  //     }
+  //   } else if (this.data.indexOfSubMenu == Menu.Comping) { // Comping
 
-    } else if (this.data.indexOfSubMenu == Menu.Barbecue) { // Barbecue
+  //   } else if (this.data.indexOfSubMenu == Menu.Barbecue) { // Barbecue
 
-    } else { // Snacks
-      // Snacks
-    }
+  //   } else { // Snacks
+  //     // Snacks
+  //   }
 
-    this.setData({
-      hideMenu: false,
-      hideCarousel: false,
-      hideContent: false,
-    })
+  //   this.setData({
+  //     hideMenu: false,
+  //     hideCarousel: false,
+  //     hideContent: false,
+  //   })
 
-    this.complete()
-  },
+  //   this.complete()
+  // },
   observe(packet) {
     try{
       var caller = 'observe';
@@ -409,7 +467,7 @@ Page({
   },
   fetchRecordsOfADOfCarouselHandler(packet) {
     var caller = 'fetchRecordsOfADOfCarousel'
-    var response = (new FetchRecordsOfADOfCarouselRsp).FromJson(packet.GetBody())
+    var response = FetchRecordsOfADOfCarouselRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
@@ -425,7 +483,7 @@ Page({
       // console.log('recordsOfADOfCarouse: ', response.GetRecordsOfADOfCarousel())
       var records = response.GetRecordsOfADOfCarousel()
       for (var i=0; i<records.length; i++) {
-        var advertisement = (new modelOfAdvertisement.Advertisement()).FromJson(records[i])
+        var advertisement = modelOfAdvertisement.Advertisement.FromJson(records[i])
         var temp = this.data.recordsOfADOfCarousel
         temp[advertisement.advertisement_id] = advertisement
         this.setData({
@@ -439,7 +497,7 @@ Page({
   },
   fetchVersionOfADOfCarouselHandler(packet) {
     var caller = 'fetchVersionOfADOfCarouselHandler'
-    var response = (new FetchVersionOfADOfCarouselRsp).FromJson(packet.GetBody())
+    var response = FetchVersionOfADOfCarouselRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
@@ -461,7 +519,7 @@ Page({
   },
   fetchIdListOfADOfCarouselHandler(packet) {
     var caller = 'fetchIdListOfADOfCarouselHandler'
-    var response = (new FetchIdListOfADOfCarouselRsp).FromJson(packet.GetBody())
+    var response = FetchIdListOfADOfCarouselRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
@@ -548,7 +606,8 @@ Page({
    * Lifecycle function--Called when page load
    */
   onLoad(options) {
-    this.setup()
+    Runtime.SetObserve(this.observe)
+    this.reloadScreen()
     this.setData({
       titleOfBarbecue: Translator.Translate(TitleOfBarbecue),
       titleOfDeals: Translator.Translate(TitleOfDeals),

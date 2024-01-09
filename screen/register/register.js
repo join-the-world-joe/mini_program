@@ -4,13 +4,9 @@ const { SMS } = require("../../common/route/sms")
 const { Translator } = require("../../common/translator/translator")
 const { Config } = require("../../config/config")
 const { Log } = require("../../utils/log")
-const {SendVerificationCodeRsp} = require('../../common/protocol/sms/send_verification_code')
-const { SendVerificationCodeOfRegister } = require("../../common/business/sms/send_verification_code")
 const { Runtime } = require("../../runtime/runtime")
 const { Account } = require("../../common/route/account")
 const { Code } = require("../../common/code/code")
-const { RegisterRsp } = require("../../common/protocol/account/register")
-const { Register } = require("../../common/business/account/register")
 const language = require("../../common/language/language")
 
 Page({
