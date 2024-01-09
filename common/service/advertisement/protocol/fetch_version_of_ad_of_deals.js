@@ -1,4 +1,4 @@
-const { Code } = require("../../code/code")
+const { Code } = require("../../../code/code")
 
 class FetchVersionOfADOfDealsReq {
   constructor() {
@@ -17,18 +17,19 @@ class FetchVersionOfADOfDealsRsp {
   GetVersionOfADOfDeals() {
     return this.version_of_ad_of_deals
   }
-  FromJson(json) { 
+  static FromJson(json) { 
+    var that = new FetchVersionOfADOfDealsRsp()
     if (json != undefined) {
       if (json.code != undefined) {
-        this.code = json.code
+        that.code = json.code
+      }
+      if (json.body != undefined) {
+        if (json.body.version_of_ad_of_deals != undefined) {
+          that.version_of_ad_of_deals = json.body.version_of_ad_of_deals
+        }
       }
     }
-    if (json.body != undefined) {
-      if (json.body.version_of_ad_of_deals != undefined) {
-        this.version_of_ad_of_deals = json.body.version_of_ad_of_deals
-      }
-    }
-    return this
+    return that
   }
 }
 

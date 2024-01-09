@@ -3,7 +3,7 @@ const { PacketClient } = require("../../../../framework/packet_client")
 const {Major} = require('../../../route/major')
 const {Runtime} = require('../../../../runtime/runtime')
 const { Advertisement } = require("../../../route/advertisement")
-const {FetchVersionOfADOfDealsReq} = require('../../protocol/advertisement/fetch_version_of_ad_of_deals')
+const {FetchVersionOfADOfDealsReq} = require('../protocol/fetch_version_of_ad_of_deals')
 
 function FetchVersionOfADOfDeals({from, caller}) {
   var hdr = new Header()

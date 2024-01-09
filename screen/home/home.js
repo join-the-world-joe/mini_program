@@ -9,6 +9,7 @@ const { Translator } = require('../../common/translator/translator')
 const { TitleOfLoading, TitleOfDeals, TitleOfCamping, TitleOfBarbecue, TitleOfSnacks } = require('../../common/language/language')
 var modelOfAdvertisement = require('../../model/advertisement')
 const {Menu} = require('../../common/macro/menu')
+
 const { FetchVersionOfADOfCarouselStep } = require('../../common/service/advertisement/progress/fetch_version_of_ad_of_carousel/fetch_version_of_ad_of_carousel_step')
 const { FetchVersionOfADOfCarouselProgress } = require('../../common/service/advertisement/progress/fetch_version_of_ad_of_carousel/fetch_version_of_ad_of_carousel_progress')
 const { FetchVersionOfADOfCarouselRsp } = require('../../common/service/advertisement/protocol/fetch_version_of_ad_of_carousel')
@@ -18,6 +19,13 @@ const { FetchIdListOfADOfCarouselRsp } = require('../../common/service/advertise
 const { FetchRecordsOfADOfCarouselStep } = require('../../common/service/advertisement/progress/fetch_records_of_ad_of_carousel/fetch_records_of_ad_of_carousel_step')
 const { FetchRecordsOfADOfCarouselProgress } = require('../../common/service/advertisement/progress/fetch_records_of_ad_of_carousel/fetch_records_of_ad_of_carousel_progress')
 const { FetchRecordsOfADOfCarouselRsp } = require('../../common/service/advertisement/protocol/fetch_records_of_ad_of_carousel')
+
+const { FetchVersionOfADOfDealsStep } = require('../../common/service/advertisement/progress/fetch_version_of_ad_of_deals/fetch_version_of_ad_of_deals_step')
+const { FetchVersionOfADOfDealsProgress } = require('../../common/service/advertisement/progress/fetch_version_of_ad_of_deals/fetch_version_of_ad_of_deals_progress')
+const { FetchVersionOfADOfDealsRsp } = require('../../common/service/advertisement/protocol/fetch_version_of_ad_of_deals')
+const { FetchIdListOfADOfDealsRsp } = require('../../common/service/advertisement/protocol/fetch_id_list_of_ad_of_deals')
+const { FetchIdListOfADOfDealsProgress } = require('../../common/service/advertisement/progress/fetch_id_list_of_ad_of_deals/fetch_id_list_of_ad_of_deals_progress')
+const { FetchIdListOfADOfDealsStep} = require('../../common/service/advertisement/progress/fetch_id_list_of_ad_of_deals/fetch_id_list_of_ad_of_deals_step')
 Page({
 
   /**
@@ -136,6 +144,24 @@ Page({
       }
     }
 
+    if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
+      if (!this.data.loadDealsCompleted) {
+        ret = this.reloadDealsProgress()
+        if (ret < 0 || ret > 0) {
+          if (ret < 0) {
+            this.complete()
+          }
+          return
+        }
+      }
+    } else if (this.data.indexOfSubMenu == Menu.Comping) { // Comping
+
+    } else if (this.data.indexOfSubMenu == Menu.Barbecue) { // Barbecue
+
+    } else { // Snacks
+      // Snacks
+    }
+
     this.setData({
       hideMenu: false,
       hideCarousel: false,
@@ -162,6 +188,31 @@ Page({
       progressOfFetchVersionOfADOfCarousel: fetchVersionOfADOfCarouselProgress,
       progressOfFetchIdListOfADOfCarousel: fetchIdListOfADOfCarouselProgress,
     })
+    if (this.data.indexOfSubMenu == Menu.Deals) { // Deals
+      var fetchVersionOfADOfDealsStep = new FetchVersionOfADOfDealsStep()
+      var fetchVersionOfADOfDealsProgress = new FetchVersionOfADOfDealsProgress({
+        step: fetchVersionOfADOfDealsStep, 
+        onSuccess: undefined, 
+        onFailure: undefined,
+      })
+      var fetchIdListOfADOfDealslStep = new FetchIdListOfADOfDealsStep()
+      var fetchIdListOfADOfDealsProgress = new FetchIdListOfADOfDealsProgress({
+        step: fetchIdListOfADOfDealslStep, 
+        onSuccess: undefined, 
+        onFailure: undefined,
+      })
+      this.setData({
+        active: false,
+        progressOfFetchVersionOfADOfDeals: fetchVersionOfADOfDealsProgress,
+        progressOfFetchIdListOfADOfDeals: fetchIdListOfADOfDealsProgress,
+      })
+    } else if (this.data.indexOfSubMenu == Menu.Comping) { // Comping
+
+    } else if (this.data.indexOfSubMenu == Menu.Barbecue) { // Barbecue
+
+    } else { // Snacks
+      // Snacks
+    }
     Runtime.SetPeriod(Config.PeriodOfScreenInitialisation)
     Runtime.SetPeriodc(this.progress)
   },
@@ -253,18 +304,18 @@ Page({
       return ret
     }
 
-    if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals) {
-      this.data.progressOfFetchRecordsOfADOfDeals.SetAdvertisementIdList(this.data.idListOfADOfDeals)
-      this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals = true
-    }
+    // if (!this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals) {
+    //   this.data.progressOfFetchRecordsOfADOfDeals.SetAdvertisementIdList(this.data.idListOfADOfDeals)
+    //   this.data.hasFigureOutArgumentOfFetchRecordsOfADOfDeals = true
+    // }
 
-    var ret = this.data.progressOfFetchRecordsOfADOfDeals.Progress()
-    if (ret != 0) {
-      return ret
-    }
-    this.setData({
-      loadDealsCompleted: true
-    })
+    // var ret = this.data.progressOfFetchRecordsOfADOfDeals.Progress()
+    // if (ret != 0) {
+    //   return ret
+    // }
+    // this.setData({
+    //   loadDealsCompleted: true
+    // })
   },
   // progress() {
   //   if (this.data.loadCompleted) {
@@ -372,7 +423,7 @@ Page({
   },
   fetchRecordsOfADOfDealsHandler(packet) {
     var caller = 'fetchRecordsOfADOfDealsHandler'
-    var response = (new FetchRecordsOfADOfDealsRsp).FromJson(packet.GetBody())
+    var response = FetchRecordsOfADOfDealsRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
@@ -422,7 +473,7 @@ Page({
   },
   fetchIdListOfADOfDealsHandler(packet) {
     var caller = 'fetchIdListOfADOfDealsHandler'
-    var response = (new FetchIdListOfADOfDealsRsp).FromJson(packet.GetBody())
+    var response = FetchIdListOfADOfDealsRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
@@ -445,7 +496,7 @@ Page({
   },
   fetchVersionOfADOfDealsHandler(packet) {
     var caller = 'fetchVersionOfADOfDealsHandler'
-    var response = (new FetchVersionOfADOfDealsRsp).FromJson(packet.GetBody())
+    var response = FetchVersionOfADOfDealsRsp.FromJson(packet.GetBody())
     Log.Debug({
       major: packet.GetHeader().GetMajor(),
       minor: packet.GetHeader().GetMinor(),
